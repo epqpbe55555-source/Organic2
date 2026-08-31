@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Smart — Electrophilic Aromatic Substitution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF1EA;
+    --bg-alt:#E3E9DE;
+    --paper:#FBFBF6;
+    --ink:#1B2420;
+    --ink-soft:#5B6660;
+    --line:#CBD3C4;
+    --electrophile:#B31955;
+    --nucleophile:#0E7C7B;
+    --activate:#3C8A54;
+    --deactivate:#B0511F;
+    --meta:#B9821E;
+    --ring:#173B36;
+    --shadow: 0 1px 0 rgba(27,36,32,0.06);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    line-height:1.55;
+  }
+  h1,h2,h3,.disp{font-family:'Space Grotesk',sans-serif;letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:64px 6% 40px;
+    background:
+      radial-gradient(ellipse at 80% -10%, rgba(14,124,123,0.12), transparent 60%),
+      var(--bg);
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-inner{position:relative; z-index:2; max-width:760px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--nucleophile);
+    margin:0 0 14px;
+  }
+  .hero h1{
+    font-size:clamp(38px,7vw,64px);
+    margin:0 0 10px;
+    font-weight:700;
+    color:var(--ring);
+  }
+  .hero p{
+    max-width:520px;
+    color:var(--ink-soft);
+    font-size:17px;
+    margin:0;
+  }
+  .benzene-wrap{
+    position:absolute;
+    right:6%;
+    top:50%;
+    transform:translateY(-50%);
+    width:260px;
+    height:260px;
+    z-index:1;
+  }
+  @media (max-width:820px){ .benzene-wrap{display:none;} }
+  .picloud{
+    animation:pulse 3.4s ease-in-out infinite;
+    transform-origin:center;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:0.35; transform:scale(1);}
+    50%{opacity:0.7; transform:scale(1.06);}
+  }
+  .electrophile-dot{
+    animation:approach 3.4s ease-in-out infinite;
+  }
+  @keyframes approach{
+    0%{ transform:translate(70px,-70px); opacity:0;}
+    35%{ transform:translate(18px,-18px); opacity:1;}
+    50%{ transform:translate(4px,-4px); opacity:1;}
+    65%{ transform:translate(18px,-18px); opacity:1;}
+    100%{ transform:translate(70px,-70px); opacity:0;}
+  }
+
+  /* ---------- REACTION-COORDINATE NAV ---------- */
+  .coord-nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(238,241,234,0.94);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    padding:14px 4% 0;
+  }
+  .coord-track{
+    max-width:1100px; margin:0 auto;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    position:relative;
+    height:74px;
+  }
+  .coord-track svg{position:absolute; left:0; top:0; width:100%; height:100%; z-index:0;}
+  .coord-btn{
+    position:relative; z-index:1;
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.02em;
+    padding:9px 14px;
+    border-radius:100px;
+    cursor:pointer;
+    transition:all .18s ease;
+    white-space:nowrap;
+  }
+  .coord-btn:nth-child(1){transform:translateY(6px);}
+  .coord-btn:nth-child(2){transform:translateY(-18px);}
+  .coord-btn:nth-child(3){transform:translateY(2px);}
+  .coord-btn:nth-child(4){transform:translateY(-18px);}
+  .coord-btn:nth-child(5){transform:translateY(6px);}
+  .coord-btn:hover{border-color:var(--nucleophile); color:var(--ring);}
+  .coord-btn.active{
+    background:var(--ring); border-color:var(--ring); color:#fff;
+  }
+
+  /* ---------- SECTIONS ---------- */
+  main{max-width:1100px; margin:0 auto; padding:0 4%;}
+  section{padding:70px 0 30px; border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .sec-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--electrophile); margin:0 0 8px;
+  }
+  .sec-title{font-size:clamp(26px,4vw,36px); margin:0 0 8px; color:var(--ring);}
+  .sec-desc{color:var(--ink-soft); max-width:640px; margin:0 0 34px; font-size:15.5px;}
+
+  /* ---- Overview law cards ---- */
+  .law-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px;}
+  .law-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:10px;
+    padding:20px 22px; box-shadow:var(--shadow);
+  }
+  .law-num{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--nucleophile); margin-bottom:8px; display:block;}
+  .law-card h3{margin:0 0 8px; font-size:17px; color:var(--ring);}
+  .law-card p{margin:0; font-size:14.5px; color:var(--ink-soft);}
+  .tagset{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .tag{font-family:'IBM Plex Mono',monospace; font-size:11px; padding:3px 9px; border-radius:100px; border:1px solid var(--line); color:var(--ink-soft);}
+
+  /* ---- Diagrams ---- */
+  .tabbar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;}
+  .tabbtn{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    background:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:8px 12px; cursor:pointer; color:var(--ink-soft);
+  }
+  .tabbtn.active{background:var(--ring); border-color:var(--ring); color:#fff;}
+  .rxn-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    padding:26px 28px; box-shadow:var(--shadow); display:none;
+  }
+  .rxn-card.active{display:block; animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+  .eqn{font-family:'IBM Plex Mono',monospace; font-size:16px; display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:6px 0 14px;}
+  .arrow{display:flex; flex-direction:column; align-items:center; font-size:11px; color:var(--ink-soft); min-width:70px;}
+  .arrow .bar{width:100%; height:2px; background:var(--ink-soft); position:relative; margin:2px 0;}
+  .arrow .bar::after{content:''; position:absolute; right:-1px; top:-3px; border:4px solid transparent; border-left-color:var(--ink-soft);}
+  .rxn-note{font-size:13.5px; color:var(--deactivate); font-family:'IBM Plex Mono',monospace;}
+  .rxn-label{font-size:14px; color:var(--ink-soft); font-style:italic;}
+
+  .subblock{margin-top:40px;}
+  .subblock h3{font-size:18px; color:var(--ring); margin-bottom:4px;}
+  .subblock .sec-desc{margin-bottom:20px;}
+
+  .chart-card{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:24px; box-shadow:var(--shadow);}
+  .chart-toggle{display:flex; gap:8px; margin-bottom:18px;}
+  .bar-row{display:grid; grid-template-columns:110px 1fr 46px; align-items:center; gap:10px; margin-bottom:10px; font-size:13px;}
+  .bar-track{background:var(--bg-alt); border-radius:6px; height:16px; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:6px; transition:width .3s ease;}
+  .bar-fill.o{background:var(--activate);}
+  .bar-fill.m{background:var(--meta);}
+  .bar-fill.p{background:var(--nucleophile);}
+  .legend{display:flex; gap:16px; font-size:12px; color:var(--ink-soft); margin-top:8px;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+
+  .orient-table-wrap{overflow-x:auto;}
+  table.orient{width:100%; border-collapse:collapse; font-size:13.5px;}
+  table.orient th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-soft); padding:8px 10px; border-bottom:1.5px solid var(--line);}
+  table.orient td{padding:8px 10px; border-bottom:1px solid var(--line); font-family:'IBM Plex Mono',monospace;}
+  table.orient tr{cursor:pointer;}
+  table.orient tr:hover{background:var(--bg-alt);}
+  table.orient tr.sel{background:#e4ecdf;}
+  .mini-bar-wrap{display:flex; height:10px; width:100%; border-radius:6px; overflow:hidden; min-width:120px;}
+
+  .quad-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .quad{border:1px dashed var(--line); border-radius:10px; padding:16px;}
+  .quad h4{margin:0 0 10px; font-size:13px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+  .chip{display:inline-block; margin:3px; padding:6px 11px; border-radius:100px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; cursor:pointer; border:1px solid transparent; color:#fff;}
+  .chip.act-strong{background:var(--activate);}
+  .chip.act-mod{background:#5AA46C;}
+  .chip.act-weak{background:#8CC49A; color:var(--ink);}
+  .chip.deact-meta{background:var(--deactivate);}
+  .chip.halogen{background:var(--meta); color:var(--ink);}
+  #chipDetail{margin-top:14px; padding:14px 16px; background:var(--bg-alt); border-radius:8px; font-size:14px; min-height:24px;}
+
+  .flow-compare{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media(max-width:700px){.flow-compare, .quad-grid{grid-template-columns:1fr;}}
+  .flow-btns{display:flex; gap:8px; margin-bottom:14px;}
+  .flow-box{border:1px solid var(--line); border-radius:10px; padding:16px; background:var(--paper);}
+  .flow-step{font-family:'IBM Plex Mono',monospace; font-size:13px; padding:8px 0; border-bottom:1px dashed var(--line);}
+  .flow-step:last-child{border-bottom:none;}
+  .flow-result{margin-top:10px; font-size:14px; color:var(--ring); font-weight:600;}
+
+  /* ---- Mini map ---- */
+  .map-wrap{display:grid; grid-template-columns:1.1fr 1fr; gap:24px; align-items:start;}
+  @media(max-width:760px){.map-wrap{grid-template-columns:1fr;}}
+  .map-nodes{position:relative; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:34px; min-height:380px;}
+  .center-node{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    background:var(--ring); color:#fff; font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px; text-align:center; padding:14px 10px; border-radius:50%;
+    width:110px; height:110px; display:flex; align-items:center; justify-content:center; line-height:1.25;
+    box-shadow:0 6px 18px rgba(23,59,54,0.28);
+  }
+  .node-btn{
+    position:absolute; background:var(--bg-alt); border:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace; font-size:12px; padding:8px 12px;
+    border-radius:100px; cursor:pointer; color:var(--ink); max-width:150px; text-align:center;
+  }
+  .node-btn:hover, .node-btn.active{background:var(--nucleophile); color:#fff; border-color:var(--nucleophile);}
+  .n1{left:2%; top:6%;}
+  .n2{right:0%; top:6%;}
+  .n3{left:-2%; top:44%;}
+  .n4{right:-4%; top:44%;}
+  .n5{left:8%; bottom:4%;}
+  .n6{right:6%; bottom:4%;}
+  .map-detail{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:26px; min-height:380px;}
+  .map-detail h4{margin:0 0 10px; color:var(--ring); font-size:17px;}
+  .map-detail p{font-size:14.5px; color:var(--ink-soft); margin:0 0 10px;}
+  .map-detail .placeholder{color:var(--ink-soft); font-style:italic; font-size:14px;}
+
+  /* ---- Flash cards ---- */
+  .fc-wrap{display:flex; flex-direction:column; align-items:center; gap:18px;}
+  .fc-counter{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-soft);}
+  .fc-card{
+    width:100%; max-width:560px; height:230px; perspective:1200px; cursor:pointer;
+  }
+  .fc-inner{
+    position:relative; width:100%; height:100%; transition:transform .5s;
+    transform-style:preserve-3d;
+  }
+  .fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+  .fc-face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    border-radius:14px; border:1px solid var(--line); box-shadow:var(--shadow);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    padding:28px; font-size:17px; background:var(--paper);
+  }
+  .fc-face.front{color:var(--ring); font-weight:600;}
+  .fc-face.back{transform:rotateY(180deg); background:#173B36; color:#F2F5EE; font-size:15px; font-family:'IBM Plex Mono',monospace;}
+  .fc-hint{font-size:11.5px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace; margin-top:-6px;}
+  .fc-controls{display:flex; gap:10px;}
+  .fc-controls button{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:9px 16px; border-radius:8px;
+    border:1px solid var(--line); background:var(--paper); cursor:pointer; color:var(--ink);
+  }
+  .fc-controls button:hover{border-color:var(--nucleophile); color:var(--ring);}
+
+  /* ---- Quiz ---- */
+  .quiz-head{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;}
+  .quiz-score{font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--ink-soft);}
+  .q-card{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin-bottom:14px; box-shadow:var(--shadow);}
+  .q-num{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--electrophile); margin-bottom:6px; display:block;}
+  .q-text{font-size:16px; margin:0 0 14px; color:var(--ink);}
+  .q-options{display:grid; gap:8px;}
+  .q-opt{
+    text-align:left; padding:10px 14px; border-radius:8px; border:1px solid var(--line);
+    background:var(--bg-alt); cursor:pointer; font-size:14px; font-family:'Source Serif 4',serif;
+  }
+  .q-opt:hover{border-color:var(--nucleophile);}
+  .q-opt.correct{background:#DCEFDF; border-color:var(--activate); font-weight:600;}
+  .q-opt.wrong{background:#F6DCD3; border-color:var(--deactivate);}
+  .q-opt[disabled]{cursor:default;}
+  .quiz-footer{display:flex; justify-content:space-between; align-items:center; margin-top:20px;}
+  #retakeBtn{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; padding:10px 18px; border-radius:8px;
+    border:1px solid var(--ring); background:var(--ring); color:#fff; cursor:pointer;
+  }
+  #quizResult{font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--ring);}
+
+  footer{
+    text-align:center; padding:34px 4% 50px; color:var(--ink-soft);
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+  }
+  footer .rights{margin-top:4px;}
+
+  ::selection{background:#B9DFCB;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">A working reference · organic chemistry</p>
+    <h1>STUDY SMART</h1>
+    <p>Electrophilic Aromatic Substitution — the rules, the reactions, and the reasoning behind orientation and reactivity, distilled for review rather than re-lectured.</p>
+  </div>
+  <div class="benzene-wrap" aria-hidden="true">
+    <svg viewBox="0 0 200 200" width="100%" height="100%">
+      <polygon points="100,40 152,70 152,130 100,160 48,130 48,70" fill="none" stroke="#173B36" stroke-width="4"/>
+      <polygon class="picloud" points="100,40 152,70 152,130 100,160 48,130 48,70" fill="none" stroke="#0E7C7B" stroke-width="10" stroke-dasharray="2 10" stroke-linecap="round"/>
+      <circle cx="100" cy="100" r="30" fill="none" stroke="#0E7C7B" stroke-width="1" opacity="0.4"/>
+      <circle class="electrophile-dot" cx="140" cy="60" r="7" fill="#B31955"/>
+      <text class="electrophile-dot" x="146" y="52" font-family="IBM Plex Mono" font-size="10" fill="#B31955">E+</text>
+    </svg>
+  </div>
+</header>
+
+<nav class="coord-nav">
+  <div class="coord-track">
+    <svg viewBox="0 0 1000 100" preserveAspectRatio="none"><path d="M40,70 Q140,15 250,15 T460,55 Q570,5 680,15 T950,70" fill="none" stroke="#CBD3C4" stroke-width="2"/></svg>
+    <button class="coord-btn active" data-target="overview">Overview</button>
+    <button class="coord-btn" data-target="diagrams">Diagrams</button>
+    <button class="coord-btn" data-target="minimap">Mini Map</button>
+    <button class="coord-btn" data-target="flashcards">Flash Cards</button>
+    <button class="coord-btn" data-target="quiz">Quiz Bank</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ============ OVERVIEW ============ -->
+  <section id="overview">
+    <p class="sec-tag">01 · reference</p>
+    <h2 class="sec-title">Overview</h2>
+    <p class="sec-desc">Not a lecture — just the rules and terms that actually get tested.</p>
+
+    <div class="law-grid">
+      <div class="law-card">
+        <span class="law-num">LAW 01</span>
+        <h3>The ring is the electron source</h3>
+        <p>The π-cloud above and below the ring plane makes benzene a base. It reacts with electron-poor reagents — electrophiles or acids.</p>
+      </div>
+      <div class="law-card">
+        <span class="law-num">LAW 02</span>
+        <h3>Substitution, not addition</h3>
+        <p>Alkenes undergo electrophilic addition; aromatic rings undergo electrophilic substitution, because substitution keeps the resonance stabilization intact.</p>
+      </div>
+      <div class="law-card">
+        <span class="law-num">LAW 03</span>
+        <h3>Reaction families</h3>
+        <p>Nitration, sulfonation, halogenation, and Friedel-Crafts reactions occur for nearly all aromatic rings.</p>
+        <div class="tagset"><span class="tag">nitrosation</span><span class="tag">diazo coupling</span><span class="tag">highly reactive rings only</span></div>
+      </div>
+      <div class="law-card">
+        <span class="law-num">LAW 04</span>
+        <h3>Activating vs. deactivating</h3>
+        <p>A group is <b>activating</b> if it makes the ring more reactive than benzene, <b>deactivating</b> if it makes it less reactive.</p>
+      </div>
+      <div class="law-card">
+        <span class="law-num">LAW 05</span>
+        <h3>ortho,para vs. meta directors</h3>
+        <p>A group is an <b>ortho,para director</b> if attack occurs mainly next to and across from it, a <b>meta director</b> if attack occurs mainly meta to it.</p>
+      </div>
+      <div class="law-card">
+        <span class="law-num">LAW 06</span>
+        <h3>Measuring reactivity</h3>
+        <p>Compare (a) time to react under identical conditions, (b) severity of conditions needed, or (c) rate in a competitive reaction against benzene.</p>
+      </div>
+      <div class="law-card">
+        <span class="law-num">LAW 07</span>
+        <h3>Directive power ranking</h3>
+        <p class="mono" style="font-size:13px;">−NH₂, −OH &gt; −OCH₃, −NHCOCH₃ &gt; −C₆H₅, −CH₃ &gt; meta directors</p>
+      </div>
+      <div class="law-card">
+        <span class="law-num">LAW 08</span>
+        <h3>Halogens are the exception</h3>
+        <p>F, Cl, Br, and I are <b>deactivating</b> yet still <b>ortho,para-directing</b> — the one class that breaks the usual pairing.</p>
+      </div>
+      <div class="law-card">
+        <span class="law-num">LAW 09</span>
+        <h3>Two groups on a ring</h3>
+        <p>Reinforcing groups predict cleanly. Opposing groups need a large gap in directive power to win clearly, and little substitution happens between two groups that are meta to each other.</p>
+      </div>
+      <div class="law-card">
+        <span class="law-num">LAW 10</span>
+        <h3>Order matters in synthesis</h3>
+        <p>The sequence you introduce substituents — and when you convert one group into another — decides which isomer you isolate.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DIAGRAMS ============ -->
+  <section id="diagrams">
+    <p class="sec-tag">02 · visual</p>
+    <h2 class="sec-title">Interactive Diagrams</h2>
+    <p class="sec-desc">Every scheme, chart, and table from the material, built to click through rather than stare at.</p>
+
+    <div class="tabbar" id="rxnTabs"></div>
+    <div id="rxnCards"></div>
+
+    <div class="subblock">
+      <h3>Toluene: one substrate, three reactions</h3>
+      <p class="sec-desc">Same ring, same methyl group — the ortho:meta:para split still shifts with the reagent.</p>
+      <div class="chart-card">
+        <div class="chart-toggle" id="tolToggle"></div>
+        <div id="tolBars"></div>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--activate)"></i>ortho</span>
+          <span><i class="dot" style="background:var(--meta)"></i>meta</span>
+          <span><i class="dot" style="background:var(--nucleophile)"></i>para</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>Orientation in nitration — 13 substituents</h3>
+      <p class="sec-desc">Click a row to see its ortho / meta / para split as a bar.</p>
+      <div class="chart-card">
+        <div class="orient-table-wrap">
+          <table class="orient" id="orientTable">
+            <thead><tr><th>Group</th><th>Ortho</th><th>Para</th><th>O+P</th><th>Meta</th><th>Split</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>Classification of substituent groups</h3>
+      <p class="sec-desc">Tap a group to see its class and directive behavior.</p>
+      <div class="chart-card">
+        <div class="quad-grid">
+          <div class="quad">
+            <h4>Activating · ortho, para directors</h4>
+            <div id="chipsActivating"></div>
+          </div>
+          <div class="quad">
+            <h4>Deactivating · meta directors</h4>
+            <div id="chipsMeta"></div>
+          </div>
+          <div class="quad">
+            <h4>Deactivating · ortho, para directors (halogens)</h4>
+            <div id="chipsHalogen"></div>
+          </div>
+          <div class="quad">
+            <h4>Directive power ranking</h4>
+            <p style="font-size:13px; color:var(--ink-soft); margin:0;">−NH₂, −OH &gt; −OCH₃, −NHCOCH₃ &gt; −C₆H₅, −CH₃ &gt; meta directors. A large gap is needed for a clean, single major product.</p>
+          </div>
+        </div>
+        <div id="chipDetail">Tap any chip above to see details here.</div>
+      </div>
+    </div>
+
+    <div class="subblock">
+      <h3>Order of synthesis changes the product</h3>
+      <p class="sec-desc">Toggle the order of steps to see how the isomer obtained changes.</p>
+      <div class="flow-compare">
+        <div class="flow-box">
+          <b style="font-size:14px;">Bromonitrobenzene from benzene</b>
+          <div class="flow-btns" style="margin-top:10px;">
+            <button class="tabbtn active" data-flow="bn" data-order="1">Nitrate → Brominate</button>
+            <button class="tabbtn" data-flow="bn" data-order="2">Brominate → Nitrate</button>
+          </div>
+          <div id="flowBN"></div>
+        </div>
+        <div class="flow-box">
+          <b style="font-size:14px;">Nitrobenzoic acid from toluene</b>
+          <div class="flow-btns" style="margin-top:10px;">
+            <button class="tabbtn active" data-flow="nb" data-order="1">Oxidize → Nitrate</button>
+            <button class="tabbtn" data-flow="nb" data-order="2">Nitrate → Oxidize</button>
+          </div>
+          <div id="flowNB"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MINI MAP ============ -->
+  <section id="minimap">
+    <p class="sec-tag">03 · structure</p>
+    <h2 class="sec-title">Mini Map</h2>
+    <p class="sec-desc">Tap a topic — its summary opens in the panel beside it.</p>
+    <div class="map-wrap">
+      <div class="map-nodes">
+        <div class="center-node">EAS</div>
+        <button class="node-btn n1" data-node="mech">Mechanism &amp; Basis</button>
+        <button class="node-btn n2" data-node="types">Reaction Types</button>
+        <button class="node-btn n3" data-node="effects">Substituent Effects</button>
+        <button class="node-btn n4" data-node="orientation">Orientation Rules</button>
+        <button class="node-btn n5" data-node="disub">Disubstituted Rings</button>
+        <button class="node-btn n6" data-node="synth">Synthesis Strategy</button>
+      </div>
+      <div class="map-detail" id="mapDetail">
+        <p class="placeholder">Select a node to open its summary here.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FLASH CARDS ============ -->
+  <section id="flashcards">
+    <p class="sec-tag">04 · recall</p>
+    <h2 class="sec-title">Flash Cards</h2>
+    <p class="sec-desc">Click a card to flip it. Covers every reaction, term, and rule in the set.</p>
+    <div class="fc-wrap">
+      <div class="fc-counter" id="fcCounter">Card 1 / 1</div>
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face front" id="fcFront"></div>
+          <div class="fc-face back" id="fcBack"></div>
+        </div>
+      </div>
+      <div class="fc-hint">click card to flip</div>
+      <div class="fc-controls">
+        <button id="fcPrev">← Prev</button>
+        <button id="fcShuffle">Shuffle</button>
+        <button id="fcNext">Next →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ BANK ============ -->
+  <section id="quiz">
+    <p class="sec-tag">05 · test yourself</p>
+    <h2 class="sec-title">Quiz Bank</h2>
+    <p class="sec-desc">Answer choices are shuffled on every attempt — no memorizing the letter.</p>
+    <div class="quiz-head">
+      <span class="quiz-score" id="quizProgress">Question 1 of 1</span>
+      <span class="quiz-score" id="quizScore">Score: 0 / 0</span>
+    </div>
+    <div id="quizBody"></div>
+    <div class="quiz-footer">
+      <span id="quizResult"></span>
+      <button id="retakeBtn">Shuffle &amp; Retake</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>Study Smart · Electrophilic Aromatic Substitution</div>
+  <div class="rights">© <span id="yr"></span> Anmar Taha. All rights reserved.</div>
+</footer>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+/* ---------------- NAV ---------------- */
+const navBtns = document.querySelectorAll('.coord-btn');
+navBtns.forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.getElementById(b.dataset.target).scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+const sections = document.querySelectorAll('main section');
+const spy = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      navBtns.forEach(b=>b.classList.toggle('active', b.dataset.target===en.target.id));
+    }
+  });
+},{rootMargin:'-40% 0px -50% 0px'});
+sections.forEach(s=>spy.observe(s));
+
+/* ---------------- DIAGRAMS: reaction tabs ---------------- */
+const reactions = [
+  {name:'Nitration', eq:['ArH + HONO₂','H₂SO₄','ArNO₂ + H₂O'], label:'A nitro compound'},
+  {name:'Sulfonation', eq:['ArH + HOSO₃H','SO₃','ArSO₃H + H₂O'], label:'A sulfonic acid'},
+  {name:'Halogenation', eq:['ArH + Cl₂','Fe','ArCl + HCl'], label:'An aryl chloride', extra:['ArH + Br₂','Fe','ArBr + HBr','An aryl bromide']},
+  {name:'F.-C. Alkylation', eq:['ArH + RCl','AlCl₃','ArR + HCl'], label:'An alkylbenzene'},
+  {name:'F.-C. Acylation', eq:['ArH + RCOCl','AlCl₃','ArCOR + HCl'], label:'A ketone (acyl chloride source)'},
+  {name:'Protonation', eq:['ArSO₃H + H⁺','H₂O','ArH + H₂SO₄'], label:'Desulfonation', extra:['ArH + D⁺','—','ArD + H⁺','Hydrogen exchange']},
+  {name:'Thallation', eq:['ArH + Tl(OOCCF₃)₃','CF₃COOH','ArTl(OOCCF₃)₂ + CF₃COOH'], label:'Thallium trifluoroacetate → arylthallium ditrifluoroacetate'},
+  {name:'Nitrosation', eq:['ArH + HONO','—','ArN=O + H₂O'], label:'A nitroso compound — only for highly reactive ArH'},
+  {name:'Diazo Coupling', eq:["ArH + Ar'N₂⁺X⁻",'—',"ArN=NAr' + HX"], label:'An azo compound — only for highly reactive ArH'},
+  {name:'Kolbe Reaction', eq:['—','—','—'], label:'Reaction of phenols only'},
+  {name:'Reimer–Tiemann', eq:['—','—','—'], label:'Reaction of phenols only'},
+];
+const tabbar = document.getElementById('rxnTabs');
+const cardsWrap = document.getElementById('rxnCards');
+reactions.forEach((r,i)=>{
+  const b = document.createElement('button');
+  b.className='tabbtn'+(i===0?' active':'');
+  b.textContent=r.name;
+  b.onclick=()=>{
+    document.querySelectorAll('#rxnTabs .tabbtn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.querySelectorAll('.rxn-card').forEach(x=>x.classList.remove('active'));
+    document.getElementById('rxn'+i).classList.add('active');
+  };
+  tabbar.appendChild(b);
+
+  const card = document.createElement('div');
+  card.className='rxn-card'+(i===0?' active':'');
+  card.id='rxn'+i;
+  let html = `<div class="eqn"><span>${r.eq[0]}</span><span class="arrow"><span>${r.eq[1]}</span><span class="bar"></span></span><span>${r.eq[2]}</span></div><div class="rxn-label">${r.label}</div>`;
+  if(r.extra){
+    html += `<div class="eqn" style="margin-top:18px;"><span>${r.extra[0]}</span><span class="arrow"><span>${r.extra[1]}</span><span class="bar"></span></span><span>${r.extra[2]}</span></div><div class="rxn-label">${r.extra[3]}</div>`;
+  }
+  card.innerHTML = html;
+  cardsWrap.appendChild(card);
+});
+
+/* ---------------- Toluene comparison chart ---------------- */
+const tolData = {
+  'Nitration': [58,4,38],
+  'Sulfonation': [32,6,62],
+  'Bromination': [33,0,67]
+};
+const tolToggle = document.getElementById('tolToggle');
+const tolBars = document.getElementById('tolBars');
+function renderTol(key){
+  const [o,m,p] = tolData[key];
+  tolBars.innerHTML = `
+    <div class="bar-row"><span>Ortho</span><div class="bar-track"><div class="bar-fill o" style="width:${o}%"></div></div><span>${o}%</span></div>
+    <div class="bar-row"><span>Meta</span><div class="bar-track"><div class="bar-fill m" style="width:${m}%"></div></div><span>${m}%</span></div>
+    <div class="bar-row"><span>Para</span><div class="bar-track"><div class="bar-fill p" style="width:${p}%"></div></div><span>${p}%</span></div>
+  `;
+}
+Object.keys(tolData).forEach((k,i)=>{
+  const b=document.createElement('button');
+  b.className='tabbtn'+(i===0?' active':'');
+  b.textContent=k;
+  b.onclick=()=>{
+    document.querySelectorAll('#tolToggle .tabbtn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderTol(k);
+  };
+  tolToggle.appendChild(b);
+});
+renderTol('Nitration');
+
+/* ---------------- Orientation table ---------------- */
+const orientData = [
+  {y:'−OH', o:'50–55', p:'45–50', op:100, m:'trace', ov:52, mv:1, pv:47},
+  {y:'−NHCOCH₃', o:19, p:79, op:98, m:2, ov:19, mv:2, pv:79},
+  {y:'−CH₃', o:58, p:38, op:96, m:4, ov:58, mv:4, pv:38},
+  {y:'−F', o:12, p:88, op:100, m:'trace', ov:12, mv:1, pv:87},
+  {y:'−Cl', o:30, p:70, op:100, m:'trace', ov:30, mv:1, pv:69},
+  {y:'−Br', o:37, p:62, op:99, m:1, ov:37, mv:1, pv:62},
+  {y:'−I', o:38, p:60, op:98, m:2, ov:38, mv:2, pv:60},
+  {y:'−NO₂', o:6.4, p:0.3, op:6.7, m:93.3, ov:6.4, mv:93.3, pv:0.3},
+  {y:'−N(CH₃)₃⁺', o:0, p:11, op:11, m:89, ov:0, mv:89, pv:11},
+  {y:'−CN', o:'—', p:'—', op:19, m:81, ov:9.5, mv:81, pv:9.5},
+  {y:'−COOH', o:19, p:1, op:20, m:80, ov:19, mv:80, pv:1},
+  {y:'−SO₃H', o:21, p:7, op:28, m:72, ov:21, mv:72, pv:7},
+  {y:'−CHO', o:'—', p:'—', op:28, m:72, ov:14, mv:72, pv:14},
+];
+const orientBody = document.querySelector('#orientTable tbody');
+orientData.forEach((row,i)=>{
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${row.y}</td><td>${row.o}</td><td>${row.p}</td><td>${row.op}</td><td>${row.m}</td>
+    <td><div class="mini-bar-wrap"><div style="width:${row.ov}%; background:var(--activate);"></div><div style="width:${row.mv}%; background:var(--meta);"></div><div style="width:${row.pv}%; background:var(--nucleophile);"></div></div></td>`;
+  tr.onclick = ()=>{
+    document.querySelectorAll('#orientTable tr').forEach(x=>x.classList.remove('sel'));
+    tr.classList.add('sel');
+  };
+  orientBody.appendChild(tr);
+});
+
+/* ---------------- Classification chips ---------------- */
+const chipData = {
+  activating:[
+    {g:'−NH₂ (−NHR, −NR2)', cls:'act-strong', tier:'Strongly activating', note:'Aniline is roughly one million times more reactive than benzene.'},
+    {g:'−OH', cls:'act-strong', tier:'Strongly activating', note:'Directs nitration almost entirely ortho/para (≈100%).'},
+    {g:'−OCH₃, −OC₂H₅', cls:'act-mod', tier:'Moderately activating', note:'Alkoxy groups feed lone-pair density into the ring.'},
+    {g:'−NHCOCH₃', cls:'act-mod', tier:'Moderately activating', note:'Directs 98% of nitration to ortho + para positions.'},
+    {g:'−C₆H₅', cls:'act-weak', tier:'Weakly activating', note:'A conjugated aryl substituent, mildly electron-donating by resonance.'},
+    {g:'−CH₃, −C₂H₅', cls:'act-weak', tier:'Weakly activating', note:'Toluene reacts about 25× faster than benzene in competitive nitration.'},
+  ],
+  meta:[
+    {g:'−NO₂', cls:'deact-meta', tier:'Deactivating, meta-directing', note:'Nitrobenzene is roughly one-millionth as reactive as benzene; ≈93% meta.'},
+    {g:'−N(CH₃)₃⁺', cls:'deact-meta', tier:'Deactivating, meta-directing', note:'Positively charged — strongly deactivating, 89% meta.'},
+    {g:'−CN', cls:'deact-meta', tier:'Deactivating, meta-directing', note:'81% of nitration goes meta.'},
+    {g:'−COOH (−COOR)', cls:'deact-meta', tier:'Deactivating, meta-directing', note:'80% meta in nitration.'},
+    {g:'−SO₃H', cls:'deact-meta', tier:'Deactivating, meta-directing', note:'72% meta; the same group is removable by desulfonation.'},
+    {g:'−CHO, −COR', cls:'deact-meta', tier:'Deactivating, meta-directing', note:'Carbonyl-bearing groups pull electron density from the ring.'},
+  ],
+  halogen:[
+    {g:'−F', cls:'halogen', tier:'Deactivating, ortho/para-directing', note:'100% combined ortho + para despite being deactivating.'},
+    {g:'−Cl', cls:'halogen', tier:'Deactivating, ortho/para-directing', note:'Chlorobenzene is about 1/30th as reactive as benzene.'},
+    {g:'−Br', cls:'halogen', tier:'Deactivating, ortho/para-directing', note:'99% combined ortho + para.'},
+    {g:'−I', cls:'halogen', tier:'Deactivating, ortho/para-directing', note:'98% combined ortho + para.'},
+  ]
+};
+function renderChips(containerId, arr){
+  const c = document.getElementById(containerId);
+  arr.forEach(item=>{
+    const chip = document.createElement('span');
+    chip.className = 'chip '+item.cls;
+    chip.textContent = item.g;
+    chip.onclick = ()=>{
+      document.getElementById('chipDetail').innerHTML = `<b>${item.g}</b> — ${item.tier}.<br>${item.note}`;
+    };
+    c.appendChild(chip);
+  });
+}
+renderChips('chipsActivating', chipData.activating);
+renderChips('chipsMeta', chipData.meta);
+renderChips('chipsHalogen', chipData.halogen);
+
+/* ---------------- Synthesis order flows ---------------- */
+const flows = {
+  bn: {
+    1: {steps:['Benzene + HNO₃/H₂SO₄ → Nitrobenzene','Nitrobenzene + Br₂/Fe → bromination directed meta by −NO₂'], result:'Product: m-Bromonitrobenzene (single isomer)'},
+    2: {steps:['Benzene + Br₂/Fe → Bromobenzene','Bromobenzene + HNO₃/H₂SO₄ → nitration directed ortho/para by −Br'], result:'Product: mixture — ortho 38% / para 62%'}
+  },
+  nb: {
+    1: {steps:['Toluene + KMnO₄ → Benzoic acid','Benzoic acid + HNO₃/H₂SO₄ → nitration directed meta by −COOH'], result:'Product: m-Nitrobenzoic acid (single isomer)'},
+    2: {steps:['Toluene + HNO₃/H₂SO₄ → o- and p-Nitrotoluene (mixture, −CH₃ directs o/p)','Each isomer + K₂Cr₂O₇ → oxidize methyl to carboxyl'], result:'Product: mixture — o-Nitrobenzoic acid + p-Nitrobenzoic acid'}
+  }
+};
+function renderFlow(key, order){
+  const target = key==='bn' ? document.getElementById('flowBN') : document.getElementById('flowNB');
+  const data = flows[key][order];
+  target.innerHTML = `${data.steps.map(s=>`<div class="flow-step">${s}</div>`).join('')}<div class="flow-result">${data.result}</div>`;
+}
+document.querySelectorAll('[data-flow]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const key = btn.dataset.flow;
+    document.querySelectorAll(`[data-flow="${key}"]`).forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderFlow(key, btn.dataset.order);
+  });
+});
+renderFlow('bn','1');
+renderFlow('nb','1');
+
+/* ---------------- Mini map ---------------- */
+const mapContent = {
+  mech: {title:'Mechanism & Basis', text:'The benzene ring supplies a π-electron cloud above and below its plane. Resonance ties these electrons to the carbon framework more tightly than an isolated alkene π bond, but they remain available to electron-seeking reagents. Because the ring acts as an electron source (a base), it reacts with electron-deficient electrophiles — and does so by substitution, which regenerates the aromatic system, rather than by addition.'},
+  types: {title:'Reaction Types', text:'Nitration, sulfonation, halogenation, and Friedel-Crafts alkylation/acylation occur for nearly all aromatic rings. Nitrosation and diazo coupling need highly reactive rings. Desulfonation (protonation), isotopic hydrogen exchange, and many ring closures look different on the surface but belong to the same family of reactions.'},
+  effects: {title:'Substituent Effects', text:'Every substituent already on the ring changes both how fast the next substitution happens (activating vs. deactivating) and where it happens (ortho,para- vs. meta-directing). Reactivity is compared by reaction time, severity of conditions, or head-to-head competitive reactions — e.g., toluene reacts about 25× faster than benzene, chlorobenzene about 1/30th as fast.'},
+  orientation: {title:'Orientation Rules', text:'With no selectivity, 60% of product would be ortho/para and 40% meta (3 of 5 open positions are ortho/para). In practice, strong o,p-directors push past 96–100%, and meta directors push 72–94% meta. Every substituent keeps the same directing character regardless of which electrophile attacks.'},
+  disub: {title:'Disubstituted Rings', text:'When two groups reinforce each other, the outcome is easy to predict. When they oppose each other, a strongly activating group generally wins if the gap in directive power is large enough — otherwise mixtures form. Very little substitution happens at a position between two groups that are meta to each other, largely for steric reasons.'},
+  synth: {title:'Synthesis Strategy', text:'The order in which substituents are introduced — and when one group is converted into another — decides which isomer is isolated. Reactions that give ortho/para mixtures are still useful, since the more symmetrical, less soluble para isomer can usually be separated out by fractional crystallization.'}
+};
+document.querySelectorAll('.node-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.node-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const d = mapContent[btn.dataset.node];
+    document.getElementById('mapDetail').innerHTML = `<h4>${d.title}</h4><p>${d.text}</p>`;
+  });
+});
+
+/* ---------------- Flash cards ---------------- */
+let flashcards = [
+  ['What does the benzene ring act as toward electrophiles?','An electron source (a base) — it reacts with electron-deficient reagents.'],
+  ['Why substitution, not addition, for benzene?','Substitution regenerates the resonance-stabilized aromatic ring.'],
+  ['Nitration','ArH + HONO₂ —H₂SO₄→ ArNO₂ + H₂O (a nitro compound)'],
+  ['Sulfonation','ArH + HOSO₃H —SO₃→ ArSO₃H + H₂O (a sulfonic acid)'],
+  ['Halogenation','ArH + X₂ —Fe→ ArX + HX (X = Cl or Br; an aryl halide)'],
+  ['Friedel–Crafts alkylation','ArH + RCl —AlCl₃→ ArR + HCl (an alkylbenzene)'],
+  ['Friedel–Crafts acylation','ArH + RCOCl —AlCl₃→ ArCOR + HCl (a ketone)'],
+  ['Protonation / desulfonation','ArSO₃H + H⁺ —H₂O→ ArH + H₂SO₄'],
+  ['Hydrogen exchange','ArH + D⁺ → ArD + H⁺'],
+  ['Thallation','ArH + Tl(OOCCF₃)₃ —CF₃COOH→ ArTl(OOCCF₃)₂ + CF₃COOH'],
+  ['Nitrosation','ArH + HONO → ArN=O + H₂O — only for highly reactive ArH'],
+  ['Diazo coupling',"ArH + Ar'N₂⁺X⁻ → ArN=NAr' + HX — only for highly reactive ArH; gives an azo compound"],
+  ['Kolbe & Reimer–Tiemann reactions','Occur only for phenols'],
+  ['Activating group','A substituent that makes the ring more reactive than benzene'],
+  ['Deactivating group','A substituent that makes the ring less reactive than benzene'],
+  ['ortho, para director','A group directing the incoming electrophile mainly ortho and para to itself'],
+  ['meta director','A group directing the incoming electrophile mainly meta to itself'],
+  ['Toluene vs. benzene (sulfonation rate)','Toluene reacts about 10–20× faster with fuming H₂SO₄'],
+  ['Nitrobenzene vs. benzene (reactivity)','Reacts more slowly, giving mainly the meta isomer'],
+  ['Toluene reactivity (competitive nitration)','About 25× more reactive than benzene'],
+  ['Chlorobenzene reactivity (competitive nitration)','About 1/30th as reactive as benzene'],
+  ['Aniline reactivity','About one million times more reactive than benzene'],
+  ['Nitrobenzene reactivity (overall)','About one-millionth as reactive as benzene'],
+  ['Halogens as substituents','A unique class: deactivating, yet ortho, para-directing'],
+  ['Strongly activating groups','−NH₂ (−NHR, −NR2), −OH'],
+  ['Moderately activating groups','−OCH₃, −OC₂H₅, −NHCOCH₃'],
+  ['Weakly activating groups','−C₆H₅, −CH₃, −C₂H₅'],
+  ['Deactivating, meta-directing groups','−NO₂, −N(CH₃)₃⁺, −CN, −COOH(COOR), −SO₃H, −CHO, −COR'],
+  ['Directive power order','−NH₂, −OH > −OCH₃, −NHCOCH₃ > −C₆H₅, −CH₃ > meta directors'],
+  ['Reinforcing substituents rule','When two groups direct to the same site, the major product is easy to predict'],
+  ['Meta–meta steric rule','Little substitution occurs between two groups that are meta to each other'],
+  ['Synthesis order tip','The order of introducing substituents decides which isomer you obtain'],
+  ['Why is the para isomer easier to purify?','It is more symmetrical and less soluble, so it crystallizes out first'],
+];
+let fcIndex = 0;
+const fcCard = document.getElementById('fcCard');
+const fcFront = document.getElementById('fcFront');
+const fcBack = document.getElementById('fcBack');
+const fcCounter = document.getElementById('fcCounter');
+function renderFC(){
+  fcCard.classList.remove('flipped');
+  fcFront.textContent = flashcards[fcIndex][0];
+  fcBack.textContent = flashcards[fcIndex][1];
+  fcCounter.textContent = `Card ${fcIndex+1} / ${flashcards.length}`;
+}
+fcCard.addEventListener('click', ()=> fcCard.classList.toggle('flipped'));
+document.getElementById('fcNext').onclick = ()=>{ fcIndex=(fcIndex+1)%flashcards.length; renderFC(); };
+document.getElementById('fcPrev').onclick = ()=>{ fcIndex=(fcIndex-1+flashcards.length)%flashcards.length; renderFC(); };
+document.getElementById('fcShuffle').onclick = ()=>{
+  for(let i=flashcards.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [flashcards[i],flashcards[j]]=[flashcards[j],flashcards[i]]; }
+  fcIndex=0; renderFC();
+};
+renderFC();
+
+/* ---------------- Quiz bank ---------------- */
+const quizBank = [
+  {q:'What role does the benzene ring play when reacting with electrophiles?', a:'Electron source / Lewis base', w:['Electron acceptor','Brønsted acid','Free-radical initiator']},
+  {q:'Why do typical benzene reactions proceed by substitution rather than addition?', a:'Substitution preserves the resonance-stabilized aromatic ring', w:['Addition needs excess electrophile','Benzene has no double bonds to add to','Addition products are always unstable']},
+  {q:'Where is the π-electron cloud of benzene located?', a:'Above and below the plane of the ring', w:['Only above the ring plane','In the plane of the ring','Localized on alternating carbons only']},
+  {q:'Which catalyst is used in nitration of benzene?', a:'H₂SO₄', w:['AlCl₃','Fe','CF₃COOH']},
+  {q:'What is the product of ArH + HOSO₃H (SO₃)?', a:'A sulfonic acid (ArSO₃H)', w:['A nitro compound','An aryl halide','A ketone']},
+  {q:'Which catalyst is typically used for aromatic halogenation with Cl₂ or Br₂?', a:'Fe', w:['H₂SO₄','AlCl₃','CF₃COOH']},
+  {q:'Friedel–Crafts alkylation uses ArH + RCl with which catalyst?', a:'AlCl₃', w:['H₂SO₄','Fe','SO₃']},
+  {q:'Friedel–Crafts acylation produces which class of product?', a:'A ketone (ArCOR)', w:['An alkylbenzene','A sulfonic acid','An amine']},
+  {q:'What reaction is ArSO₃H + H⁺ (H₂O) → ArH + H₂SO₄?', a:'Desulfonation (protonation)', w:['Nitrosation','Diazo coupling','Thallation']},
+  {q:'Nitrosation and diazo coupling occur readily only for:', a:'Highly reactive aromatic rings', w:['Deactivated rings','Halogenated rings','Any ArH under forcing conditions']},
+  {q:'The Kolbe and Reimer–Tiemann reactions are characteristic of:', a:'Phenols', w:['Nitrobenzenes','Anilines','Toluenes only']},
+  {q:'Which reagent is used for thallation of an aromatic ring?', a:'Tl(OOCCF₃)₃ in CF₃COOH', w:['AlCl₃','HONO',"Ar'N₂⁺X⁻"]},
+  {q:'In sulfonation of toluene at 35 °C, which isomers form in appreciable amounts?', a:'ortho and para', w:['ortho and meta','meta and para','only para']},
+  {q:'What percentage of toluene sulfonation product is the para isomer?', a:'62%', w:['32%','6%','100%']},
+  {q:'A group that makes the ring more reactive than benzene is called:', a:'An activating group', w:['A deactivating group','A meta director','An electrophile']},
+  {q:'A group directing substitution mainly next to and across from itself is a(n):', a:'ortho, para director', w:['meta director','activating agent only','leaving group']},
+  {q:'Toluene reacts with fuming sulfuric acid compared to benzene:', a:'About 10–20× faster', w:['About 10–20× slower','At the same rate','Only under UV light']},
+  {q:'Nitrobenzene undergoes substitution compared to benzene:', a:'More slowly, giving mainly meta product', w:['Faster, giving para product','At the same rate','Only with Friedel-Crafts catalysts']},
+  {q:'In competitive nitration, how much more reactive is toluene than benzene?', a:'About 25 times', w:['About 2 times','About 100 times','Equally reactive']},
+  {q:"Chlorobenzene's reactivity relative to benzene in competitive nitration is:", a:'About 1/30th as reactive', w:['About 30× more reactive','Equal','About 1/2 as reactive']},
+  {q:'Aniline (C₆H₅NH₂) is approximately how much more reactive than benzene?', a:'About one million times', w:['About ten times','About one hundred times','Equally reactive']},
+  {q:'Nitrobenzene is approximately how reactive compared to benzene?', a:'About one-millionth as reactive', w:['About ten times as reactive','Equally reactive','About 1/100 as reactive']},
+  {q:'With no selectivity, what split would 5 open ring positions give?', a:'60% ortho/para, 40% meta', w:['50% / 50%','40% ortho/para, 60% meta','100% ortho/para']},
+  {q:'−OH as a substituent directs nitration almost entirely to:', a:'ortho and para (≈100% combined)', w:['meta (≈100%)','equally to all positions','only para']},
+  {q:'Which substituent directs about 93% of nitration to meta?', a:'−NO₂', w:['−CH₃','−OH','−Cl']},
+  {q:'The halogens (F, Cl, Br, I) are unusual because they are:', a:'Deactivating yet ortho, para-directing', w:['Activating yet meta-directing','Activating and ortho,para-directing','Deactivating and meta-directing']},
+  {q:'Which group is classified as strongly activating?', a:'−NH₂', w:['−CH₃','−Cl','−COOH']},
+  {q:'Which group is classified as moderately activating?', a:'−OCH₃', w:['−NO₂','−SO₃H','−Br']},
+  {q:'−CH₃ and −C₆H₅ belong to which activation class?', a:'Weakly activating', w:['Strongly activating','Deactivating','Meta-directing']},
+  {q:'Which of these is a deactivating, meta-directing group?', a:'−COOH', w:['−CH₃','−OH','−F']},
+  {q:"When two ring substituents reinforce each other's directive effect, the outcome is:", a:'Easily predicted — substitution occurs where both groups favor', w:['Impossible to predict','Always meta to both','A racemic mixture']},
+  {q:'Strongly activating groups generally win over deactivating or weakly activating groups when the gap in directive power is:', a:'Large enough', w:['Always negligible','Only when catalysts are absent','Only in Friedel-Crafts reactions']},
+  {q:'What happens at positions between two groups that are meta to each other?', a:'There is often little substitution there', w:['It is always the major product','It happens exclusively there','It is unaffected by sterics']},
+  {q:'To prepare m-bromonitrobenzene from benzene, the correct order is:', a:'Nitrate first, then brominate', w:['Brominate first, then nitrate','Do both simultaneously','Order does not matter']},
+  {q:'Brominating benzene first and then nitrating gives mainly:', a:'A mixture of ortho and para bromonitrobenzene', w:['Pure meta-bromonitrobenzene','Pure ortho only','No reaction']},
+  {q:'To obtain m-nitrobenzoic acid from toluene, which order should be used?', a:'Oxidize the methyl group first, then nitrate', w:['Nitrate first, then oxidize','Sulfonate first','Halogenate first']},
+  {q:'Why is the para isomer often easier to purify from an o/p mixture?', a:'It is more symmetrical, less soluble, and crystallizes out first', w:['It always forms in 100% yield','It reacts further to remove ortho','It is the only isomer formed']},
+  {q:'Reactivity of a substituted benzene relative to benzene can be measured by:', a:'Comparing reaction times, severity of conditions, or competitive reactions', w:['Only by melting point','Only by color change','Only by boiling point']},
+];
+
+let quizOrder = [];
+let userAnswers = [];
+let quizScore = 0;
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+function buildQuiz(){
+  quizOrder = shuffle(quizBank.map((_,i)=>i));
+  userAnswers = new Array(quizBank.length).fill(null);
+  quizScore = 0;
+  renderQuiz();
+}
+
+function renderQuiz(){
+  const body = document.getElementById('quizBody');
+  body.innerHTML = '';
+  quizOrder.forEach((qi, idx)=>{
+    const item = quizBank[qi];
+    const options = shuffle([{t:item.a, correct:true}, ...item.w.map(t=>({t,correct:false}))]);
+    const card = document.createElement('div');
+    card.className='q-card';
+    card.innerHTML = `<span class="q-num">Question ${idx+1}</span><p class="q-text">${item.q}</p><div class="q-options"></div>`;
+    const optWrap = card.querySelector('.q-options');
+    options.forEach(opt=>{
+      const b = document.createElement('button');
+      b.className='q-opt';
+      b.textContent = opt.t;
+      b.onclick = ()=>{
+        if(userAnswers[idx]!==null) return;
+        userAnswers[idx] = opt.correct;
+        Array.from(optWrap.children).forEach(child=>{
+          child.setAttribute('disabled','true');
+          if(child.textContent === item.a) child.classList.add('correct');
+        });
+        if(!opt.correct) b.classList.add('wrong');
+        else quizScore++;
+        updateScore();
+      };
+      optWrap.appendChild(b);
+    });
+    body.appendChild(card);
+  });
+  document.getElementById('quizProgress').textContent = `${quizBank.length} questions`;
+  updateScore();
+  document.getElementById('quizResult').textContent = '';
+}
+
+function updateScore(){
+  const answered = userAnswers.filter(a=>a!==null).length;
+  document.getElementById('quizScore').textContent = `Score: ${quizScore} / ${answered} answered`;
+  if(answered === quizBank.length){
+    document.getElementById('quizResult').textContent = `Done — final score ${quizScore} / ${quizBank.length}`;
+  }
+}
+
+document.getElementById('retakeBtn').onclick = buildQuiz;
+buildQuiz();
+</script>
+</body>
+</html>
