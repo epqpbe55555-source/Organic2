@@ -513,7 +513,12 @@
   <section id="flashcards">
     <p class="sec-tag">04 · recall</p>
     <h2 class="sec-title">Flash Cards</h2>
-    <p class="sec-desc">Click a card to flip it. Covers every reaction, term, and rule in the set.</p>
+    <p class="sec-desc">Click a card to flip it. Choose a difficulty level — each covers the full set at that depth.</p>
+    <div class="tabbar" id="fcLevelTabs">
+      <button class="tabbtn level-btn active" data-level="easy">Level 1 · Easy (60)</button>
+      <button class="tabbtn level-btn" data-level="medium">Level 2 · Medium (50)</button>
+      <button class="tabbtn level-btn" data-level="hard">Level 3 · Hard (40)</button>
+    </div>
     <div class="fc-wrap">
       <div class="fc-counter" id="fcCounter">Card 1 / 1</div>
       <div class="fc-card" id="fcCard">
@@ -535,7 +540,12 @@
   <section id="quiz">
     <p class="sec-tag">05 · test yourself</p>
     <h2 class="sec-title">Quiz Bank</h2>
-    <p class="sec-desc">Answer choices are shuffled on every attempt — no memorizing the letter.</p>
+    <p class="sec-desc">Answer choices are shuffled on every attempt — no memorizing the letter. Choose a difficulty level.</p>
+    <div class="tabbar" id="quizLevelTabs">
+      <button class="tabbtn level-btn active" data-level="easy">Level 1 · Easy (60)</button>
+      <button class="tabbtn level-btn" data-level="medium">Level 2 · Medium (50)</button>
+      <button class="tabbtn level-btn" data-level="hard">Level 3 · Hard (40)</button>
+    </div>
     <div class="quiz-head">
       <span class="quiz-score" id="quizProgress">Question 1 of 1</span>
       <span class="quiz-score" id="quizScore">Score: 0 / 0</span>
@@ -757,41 +767,167 @@ document.querySelectorAll('.node-btn').forEach(btn=>{
 });
 
 /* ---------------- Flash cards ---------------- */
-let flashcards = [
-  ['What does the benzene ring act as toward electrophiles?','An electron source (a base) — it reacts with electron-deficient reagents.'],
-  ['Why substitution, not addition, for benzene?','Substitution regenerates the resonance-stabilized aromatic ring.'],
-  ['Nitration','ArH + HONO₂ —H₂SO₄→ ArNO₂ + H₂O (a nitro compound)'],
-  ['Sulfonation','ArH + HOSO₃H —SO₃→ ArSO₃H + H₂O (a sulfonic acid)'],
-  ['Halogenation','ArH + X₂ —Fe→ ArX + HX (X = Cl or Br; an aryl halide)'],
-  ['Friedel–Crafts alkylation','ArH + RCl —AlCl₃→ ArR + HCl (an alkylbenzene)'],
-  ['Friedel–Crafts acylation','ArH + RCOCl —AlCl₃→ ArCOR + HCl (a ketone)'],
-  ['Protonation / desulfonation','ArSO₃H + H⁺ —H₂O→ ArH + H₂SO₄'],
-  ['Hydrogen exchange','ArH + D⁺ → ArD + H⁺'],
-  ['Thallation','ArH + Tl(OOCCF₃)₃ —CF₃COOH→ ArTl(OOCCF₃)₂ + CF₃COOH'],
-  ['Nitrosation','ArH + HONO → ArN=O + H₂O — only for highly reactive ArH'],
-  ['Diazo coupling',"ArH + Ar'N₂⁺X⁻ → ArN=NAr' + HX — only for highly reactive ArH; gives an azo compound"],
-  ['Kolbe & Reimer–Tiemann reactions','Occur only for phenols'],
-  ['Activating group','A substituent that makes the ring more reactive than benzene'],
-  ['Deactivating group','A substituent that makes the ring less reactive than benzene'],
-  ['ortho, para director','A group directing the incoming electrophile mainly ortho and para to itself'],
-  ['meta director','A group directing the incoming electrophile mainly meta to itself'],
-  ['Toluene vs. benzene (sulfonation rate)','Toluene reacts about 10–20× faster with fuming H₂SO₄'],
-  ['Nitrobenzene vs. benzene (reactivity)','Reacts more slowly, giving mainly the meta isomer'],
-  ['Toluene reactivity (competitive nitration)','About 25× more reactive than benzene'],
-  ['Chlorobenzene reactivity (competitive nitration)','About 1/30th as reactive as benzene'],
-  ['Aniline reactivity','About one million times more reactive than benzene'],
-  ['Nitrobenzene reactivity (overall)','About one-millionth as reactive as benzene'],
-  ['Halogens as substituents','A unique class: deactivating, yet ortho, para-directing'],
-  ['Strongly activating groups','−NH₂ (−NHR, −NR2), −OH'],
-  ['Moderately activating groups','−OCH₃, −OC₂H₅, −NHCOCH₃'],
-  ['Weakly activating groups','−C₆H₅, −CH₃, −C₂H₅'],
-  ['Deactivating, meta-directing groups','−NO₂, −N(CH₃)₃⁺, −CN, −COOH(COOR), −SO₃H, −CHO, −COR'],
-  ['Directive power order','−NH₂, −OH > −OCH₃, −NHCOCH₃ > −C₆H₅, −CH₃ > meta directors'],
-  ['Reinforcing substituents rule','When two groups direct to the same site, the major product is easy to predict'],
-  ['Meta–meta steric rule','Little substitution occurs between two groups that are meta to each other'],
-  ['Synthesis order tip','The order of introducing substituents decides which isomer you obtain'],
-  ['Why is the para isomer easier to purify?','It is more symmetrical and less soluble, so it crystallizes out first'],
+const flashcardsEasy = [
+  ['What role does the benzene ring play toward an electrophile?', 'It acts as an electron source — a base — because of the π-electron cloud above and below the ring plane.'],
+  ['Where is the π-electron cloud of benzene located?', 'Above and below the plane of the ring.'],
+  ['Why are benzene\'s π electrons still available to an electrophile despite resonance?', 'Because although resonance binds them more tightly than an alkene\'s π electrons, they are still loosely held compared with a full electron pair.'],
+  ['What kind of reagent reacts with benzene: electrophile or nucleophile?', 'An electrophile — an electron-deficient reagent (or acid).'],
+  ['Why does benzene undergo substitution instead of addition?', 'Substitution preserves the resonance-stabilized aromatic ring system, unlike addition.'],
+  ['What are alkenes\' typical reactions called?', 'Electrophilic addition reactions.'],
+  ['What are benzene\'s typical reactions called?', 'Electrophilic substitution reactions.'],
+  ['Besides benzene itself, what other rings undergo electrophilic aromatic substitution?', 'The benzene ring wherever it occurs, and many other aromatic rings, benzenoid and non-benzenoid.'],
+  ['Name the four reaction types undergone by nearly all aromatic rings.', 'Nitration, halogenation, sulfonation, and Friedel–Crafts reactions.'],
+  ['Which two EAS reactions occur only for rings of high reactivity?', 'Nitrosation and diazo coupling.'],
+  ['Give three reaction types that, on closer look, are properly viewed as EAS reactions.', 'Desulfonation, isotopic exchange, and many ring closures.'],
+  ['Why is electrophilic aromatic substitution so important synthetically?', 'It is the initial route of access to nearly all aromatic compounds, allowing direct introduction of substituents that can later be converted into others.'],
+  ['What does \'Ar\' stand for in EAS equations?', 'Aryl — any aromatic group attached directly through a ring carbon.'],
+  ['Write the general equation for nitration.', 'ArH + HONO₂ —H₂SO₄→ ArNO₂ + H₂O'],
+  ['What is the product of nitration called?', 'A nitro compound.'],
+  ['Write the general equation for sulfonation.', 'ArH + HOSO₃H —SO₃→ ArSO₃H + H₂O'],
+  ['What is the product of sulfonation called?', 'A sulfonic acid.'],
+  ['Write the general equation for chlorination of ArH.', 'ArH + Cl₂ —Fe→ ArCl + HCl'],
+  ['Write the general equation for bromination of ArH.', 'ArH + Br₂ —Fe→ ArBr + HBr'],
+  ['Write the general equation for Friedel–Crafts alkylation.', 'ArH + RCl —AlCl₃→ ArR + HCl'],
+  ['What is the product of Friedel–Crafts alkylation called?', 'An alkylbenzene.'],
+  ['Write the general equation for Friedel–Crafts acylation.', 'ArH + RCOCl —AlCl₃→ ArCOR + HCl'],
+  ['What is the product of Friedel–Crafts acylation called?', 'A ketone.'],
+  ['Write the equation for desulfonation (protonation of ArSO₃H).', 'ArSO₃H + H⁺ —H₂O→ ArH + H₂SO₄'],
+  ['What is another name for the reaction ArSO₃H + H⁺ → ArH + H₂SO₄?', 'Desulfonation.'],
+  ['Write the equation for hydrogen (isotopic) exchange.', 'ArH + D⁺ → ArD + H⁺'],
+  ['Write the equation for thallation.', 'ArH + Tl(OOCCF₃)₃ —CF₃COOH→ ArTl(OOCCF₃)₂ + CF₃COOH'],
+  ['What reagent is used for thallation?', 'Thallium trifluoroacetate, Tl(OOCCF₃)₃, in CF₃COOH.'],
+  ['Write the equation for nitrosation.', 'ArH + HONO → ArN=O + H₂O'],
+  ['What is the product of nitrosation called?', 'A nitroso compound.'],
+  ['Under what condition does nitrosation occur?', 'Only for highly reactive ArH.'],
+  ['Write the equation for diazo coupling.', 'ArH + Ar\'N₂⁺X⁻ → ArN=NAr\' + HX'],
+  ['What is the product of diazo coupling called?', 'An azo compound.'],
+  ['Under what condition does diazo coupling occur?', 'Only for highly reactive ArH.'],
+  ['Which two EAS reactions are undergone only by phenols?', 'The Kolbe reaction and the Reimer–Tiemann reaction.'],
+  ['Are benzene and toluene soluble in sulfuric acid?', 'No — they are insoluble, while their sulfonic acids are readily soluble.'],
+  ['How is completion of a sulfonation reaction detected experimentally?', 'By the simple disappearance of the hydrocarbon layer.'],
+  ['Which isomers form in appreciable amounts from toluene sulfonation?', 'The ortho and para isomers.'],
+  ['What percentage of toluene sulfonation product is p-toluenesulfonic acid?', '62%.'],
+  ['What percentage of toluene sulfonation product is o-toluenesulfonic acid?', '32%.'],
+  ['What percentage of toluene sulfonation product is the m-isomer?', '6%.'],
+  ['Define an activating group.', 'A group that makes the ring more reactive than benzene.'],
+  ['Define a deactivating group.', 'A group that makes the ring less reactive than benzene.'],
+  ['Define an ortho, para director.', 'A group that causes attack to occur chiefly at positions ortho and para to it.'],
+  ['Define a meta director.', 'A group that causes attack to occur chiefly at positions meta to it.'],
+  ['List the strongly activating groups.', '−NH₂ (−NHR, −NR₂) and −OH.'],
+  ['List the moderately activating groups.', '−OCH₃, −OC₂H₅, and −NHCOCH₃.'],
+  ['List the weakly activating groups.', '−C₆H₅, −CH₃, −C₂H₅.'],
+  ['List the deactivating, meta-directing groups.', '−NO₂, −N(CH₃)₃⁺, −CN, −COOH (−COOR), −SO₃H, −CHO, −COR.'],
+  ['Which groups are deactivating yet ortho, para-directing?', 'The halogens: F, Cl, Br, I.'],
+  ['If there were no selectivity at all, what % of product would be ortho/para vs. meta?', '60% ortho and para, 40% meta (3 of 5 open positions are o/p, 2 are meta).'],
+  ['How many of the studied groups direct 96–100% of nitration to ortho and para?', 'Seven groups.'],
+  ['How many of the studied groups direct 72–94% of nitration to meta?', 'Six groups.'],
+  ['What percentage of nitration does −OH direct to ortho plus para?', '100% (only a trace goes meta).'],
+  ['What percentage of nitration does −NO₂ direct to meta?', '93.3%.'],
+  ['How does toluene\'s reaction rate with fuming H₂SO₄ compare to benzene\'s?', 'Toluene reacts in about one-tenth to one-twentieth the time benzene needs.'],
+  ['In competitive nitration, how much more reactive is toluene than benzene?', 'About 25 times more reactive.'],
+  ['In competitive nitration, how does chlorobenzene\'s reactivity compare to benzene\'s?', 'Chlorobenzene is only about one-thirtieth as reactive as benzene.'],
+  ['Approximately how much more reactive is aniline than benzene?', 'About one million times more reactive.'],
+  ['Approximately how reactive is nitrobenzene compared with benzene?', 'About one-millionth as reactive.'],
 ];
+
+const flashcardsMedium = [
+  ['Why must benzene react by substitution rather than addition, in terms of the ring\'s stability?', 'Addition would destroy the cyclic conjugation and lose the resonance (aromatic) stabilization, whereas substitution regenerates the fully conjugated aromatic ring after the electrophile replaces a hydrogen.'],
+  ['Compare the severity of nitration conditions needed for benzene versus nitrobenzene.', 'Benzene nitrates in under an hour at 60 °C with concentrated H₂SO₄/HNO₃, while nitrobenzene needs fuming HNO₃ with concentrated H₂SO₄ at 90 °C — showing −NO₂ is strongly deactivating.'],
+  ['Name the three experimental methods used to compare the reactivity of a substituted benzene with benzene.', '(1) Time required for reaction under identical conditions, (2) severity of conditions needed for comparable reaction, (3) competitive reactions for a limited amount of reagent.'],
+  ['In a competitive nitration of benzene and toluene, what does obtaining ~25× more nitrotoluene than nitrobenzene indicate?', 'That toluene is about 25 times more reactive than benzene toward the electrophile, confirming −CH₃ is activating.'],
+  ['Give the o/m/p percentages for nitration of toluene.', '58% ortho, 4% meta, 38% para.'],
+  ['Give the o/m/p percentages for sulfonation of toluene.', '32% ortho, 6% meta, 62% para.'],
+  ['Give the o/m/p percentages for bromination of toluene.', '33% ortho, ~0% meta, 67% para.'],
+  ['Does a substituent\'s directing preference (o,p vs. meta) change with different electrophiles?', 'No — a given group directs the same general way (predominantly o,p or predominantly meta) regardless of which electrophile is used, though exact percentages vary.'],
+  ['Give the ortho/para/meta nitration percentages for −NHCOCH₃.', '19% ortho, 79% para, 2% meta (98% combined ortho+para).'],
+  ['Give the ortho/para/meta nitration percentages for −Br.', '37% ortho, 62% para, 1% meta (99% combined ortho+para).'],
+  ['Give the ortho/para/meta nitration percentages for −I.', '38% ortho, 60% para, 2% meta (98% combined ortho+para).'],
+  ['Give the meta nitration percentage for −CN.', '81% meta (19% combined ortho+para).'],
+  ['Give the meta nitration percentage for −COOH.', '80% meta (19% ortho, 1% para).'],
+  ['Give the meta nitration percentage for −SO₃H.', '72% meta (21% ortho, 7% para).'],
+  ['Give the meta nitration percentage for −CHO.', '72% meta (28% combined ortho+para).'],
+  ['In disubstituted benzenes I, II, III from the source (CH₃/NO₂, SO₃H/NO₂, NHCOCH₃/CN), why is orientation easy to predict?', 'Because the directive influence of the two substituents reinforces — both point to the same position(s), so no conflict arises.'],
+  ['What is the directive power order used to predict which group \'wins\' when effects oppose?', '−NH₂, −OH > −OCH₃, −NHCOCH₃ > −C₆H₅, −CH₃ > meta directors.'],
+  ['When OH and CH3 are both on a ring and nitrated, what is observed?', 'A single (sole) product — the strongly activating −OH group controls the orientation over the weakly activating −CH₃.'],
+  ['When −NHCOCH₃ and −CH₃ are both on a ring and brominated, what is observed?', 'One chief product, controlled predominantly by the more strongly activating −NHCOCH₃ group.'],
+  ['When −CHO and −OH are both on a ring and brominated, what is observed?', 'One chief product, controlled by the strongly activating −OH over the deactivating −CHO.'],
+  ['What happens when the two competing groups have similar (not greatly different) directive power, as with CH₃ and Cl?', 'A mixture forms — nitration of CH₃/Cl-substituted benzene gives 58% and 42% of two different products rather than one dominant isomer.'],
+  ['What is the steric explanation for little substitution occurring between two meta-positioned groups?', 'There is not enough room between two groups located meta to each other for appreciable substitution to occur there.'],
+  ['In the Cl/Br disubstituted ring nitration example (IV), what were the approximate percentages?', '37% at one position, 1% between the groups, and 62% at the remaining position.'],
+  ['In the CH₃/Cl disubstituted ring nitration example (V), what were the approximate percentages?', '59% at one position, 9% between the groups, and 32% at the remaining position.'],
+  ['Why does the synthesis order matter when preparing bromonitrobenzene?', 'Nitrating first then brominating gives the meta isomer (since −NO₂ is a meta director); brominating first then nitrating gives a mixture of ortho and para isomers (since −Br is an o,p-director).'],
+  ['What product distribution results from brominating benzene first, then nitrating?', 'A mixture of ortho- (38%) and para- (62%) bromonitrobenzene.'],
+  ['What product results from nitrating benzene first, then brominating?', 'm-Bromonitrobenzene, essentially as a single isomer.'],
+  ['Why does the order of oxidation vs. nitration matter when making nitrobenzoic acid from toluene?', 'Oxidizing the methyl group to −COOH first (then nitrating) gives m-nitrobenzoic acid, since −COOH is a meta director; nitrating first (then oxidizing) gives a mixture of o- and p-nitrobenzoic acid, since −CH�3 is an o,p-director.'],
+  ['What does K₂Cr₂O₇ do to o- and p-nitrotoluene in the synthesis sequence?', 'It oxidizes the methyl group to a carboxyl group, giving a mixture of o- and p-nitrobenzoic acid.'],
+  ['What does KMnO₄ do to toluene in the synthesis sequence?', 'It oxidizes the methyl group to a carboxyl group, giving benzoic acid.'],
+  ['Why is the pure para isomer usually easier to isolate than the ortho isomer from an o/p mixture?', 'The more symmetrical para isomer is less soluble and crystallizes out first during fractional crystallization, while the ortho isomer stays in solution and is harder to purify.'],
+  ['Why does some para isomer end up contaminating the ortho isomer during purification?', 'Some para isomer remains dissolved along with the more soluble ortho isomer even after most of the para isomer has crystallized out.'],
+  ['What general trend links group activation strength to reactivity rate?', 'The more strongly activating a group, the faster (more reactive) the ring reacts — e.g., aniline (−NH₂) is about a million times more reactive than benzene.'],
+  ['What general trend links group deactivation strength to reactivity rate?', 'The more strongly deactivating a group, the slower (less reactive) the ring reacts — e.g., nitrobenzene is about a millionth as reactive as benzene.'],
+  ['Which class of substituents is unusual because deactivation and orientation don\'t pair the normal way?', 'The halogens — deactivating like meta directors, but still ortho, para-directing like activating groups.'],
+  ['Why is toluene\'s disappearance of the hydrocarbon layer faster than benzene\'s during sulfonation?', 'Because toluene, activated by −CH₃, reacts with fuming sulfuric acid much faster than benzene — within a minute or two versus 20–30 minutes for benzene.'],
+  ['What do \'time required\' and \'severity of conditions\' comparisons have in common as reactivity tests?', 'Both compare how readily a substituted ring reacts relative to benzene without needing a direct head-to-head competition — one measures duration, the other measures how forcing the conditions must be.'],
+  ['How is a competitive reaction between benzene and a substituted benzene carried out experimentally?', 'Equimolar amounts of both compounds are treated with a small, limited amount of reagent (e.g., dissolved in nitromethane or acetic acid) so they compete for it, and the product ratio reveals relative reactivity.'],
+  ['Why must the identification of isomers (ortho, meta, para) be confirmed against authentic samples?', 'Because determining a substituent\'s orientation effect requires comparing the reaction product with a sample of known structure prepared independently.'],
+  ['What does \'the group already attached to the ring\' determine in an EAS reaction?', 'Both how readily the incoming electrophile attacks (reactivity) and where it attacks (orientation).'],
+  ['Between −OCH₃/−NHCOCH₃ and −C₆H₅/−CH₃, which pair has greater directive power?', '−OCH₃ and −NHCOCH₃ (moderately activating) have greater directive power than −C₆H₅ and −CH₃ (weakly activating).'],
+  ['What does \'chief product\' imply about a disubstituted EAS reaction, compared to \'sole product\'?', '\'Chief product\' means one isomer predominates but minor amounts of others may form; \'sole product\' means essentially only one isomer is obtained.'],
+  ['Compare the meta-directing strength of −COOH versus −SO₃H based on the data.', '−COOH directs 80% to meta, slightly more strongly meta-directing in this data set than −SO₃H, which directs 72% to meta.'],
+  ['Compare o,p-directing strength of −F versus −CH₃ toward nitration.', '−F directs 100% combined ortho+para (mostly para, 88%), while −CH₃ directs 96% combined ortho+para (58% ortho, 38% para) — both strongly o,p but with different o:p ratios.'],
+  ['Why can Friedel–Crafts alkylation and acylation both use AlCl₃ yet give different products?', 'Because the electrophile differs — alkylation reacts ArH with RCl to install an alkyl group, while acylation reacts ArH with RCOCl to install an acyl group, giving a ketone instead of an alkylbenzene.'],
+  ['What is the practical significance of EAS being able to convert one substituent into another?', 'It lets chemists install an easily made substituent first, then transform it (e.g., oxidize −CH₃ to −COOH) to access products otherwise hard to make directly, while still controlling orientation via directing effects.'],
+  ['Why is the outcome difficult to predict when two directing effects strongly oppose each other and are similar in strength?', 'Because neither group\'s directive influence clearly dominates, so complicated mixtures of several products are often obtained.'],
+  ['What percentage of nitration does −N(CH₃)₃⁺ direct to meta, and what does this reflect?', '89% meta — reflecting that a full positive charge on the substituent strongly withdraws electron density, making it a powerful deactivator and meta director.'],
+  ['Compare the two \'generalizations\' the text gives for predicting orientation in disubstituted benzenes.', '(a) Strongly activating groups generally win out over deactivating or weakly activating groups when the gap is large enough; (b) there is often little substitution between two groups that are meta to each other.'],
+  ['Why are nitrosation and diazo coupling restricted to highly reactive rings, unlike nitration or halogenation?', 'Because HONO and diazonium salts are comparatively weak electrophiles, so they can only attack rings that are strongly activated; ordinary or deactivated rings do not react with them.'],
+];
+
+const flashcardsHard = [
+  ['A synthesis calls for m-bromonitrobenzene starting from benzene. Which reagent should be added first, and why?', 'Nitrate first (HNO₃/H₂SO₄) to install the meta-directing −NO₂ group, then brominate (Br₂/Fe); bromination is then directed meta by −NO₂, giving m-bromonitrobenzene as essentially the sole product.'],
+  ['A synthesis calls for a mixture of o- and p-bromonitrobenzene starting from benzene. What order achieves this, and what governs the outcome?', 'Brominate first (Br₂/Fe) to install the o,p-directing (though deactivating) −Br group, then nitrate (HNO₃/H₂SO₄); nitration is directed ortho/para by −Br, giving 38% ortho and 62% para bromonitrobenzene.'],
+  ['To obtain m-nitrobenzoic acid from toluene, in what order must oxidation and nitration be carried out, and why?', 'Oxidize the methyl group to −COOH first (KMnO₄ → benzoic acid), then nitrate; the meta-directing −COOH group then sends the incoming −NO₂ to the meta position, giving essentially pure m-nitrobenzoic acid.'],
+  ['Explain why nitrating toluene before oxidizing gives a different isomer mixture than oxidizing before nitrating.', 'Nitrating first is controlled by the o,p-directing −CH₃ group, giving a mixture of o- and p-nitrotoluene; oxidizing each afterward to −COOH preserves ring substitution pattern, yielding a mixture of o- and p-nitrobenzoic acid — the opposite regiochemical outcome from oxidizing first.'],
+  ['Given that toluene is 25× more reactive than benzene and chlorobenzene is 1/30th as reactive as benzene, roughly how much more reactive is toluene than chlorobenzene?', 'Roughly 25 × 30 ≈ 750 times more reactive, since reactivity ratios to a common reference (benzene) can be compared multiplicatively.'],
+  ['Aniline is about a million times more reactive than benzene, and nitrobenzene is about a millionth as reactive. Roughly how large is the reactivity gap between aniline and nitrobenzene?', 'On the order of a trillion (10¹²)-fold difference in reactivity, since aniline is ~10⁶× benzene and nitrobenzene is ~10⁻⁶× benzene.'],
+  ['Why does the \'no selectivity\' expectation of 60% ortho/para and 40% meta arise mathematically, and how does real data compare?', 'Of the 5 ring positions open to attack around a monosubstituted ring, 3 are ortho/para and 2 are meta (statistically 60:40); real substituents deviate strongly from this — o,p-directors reach 96–100% o,p while meta directors reach 72–94% meta, showing electronic rather than purely statistical control.'],
+  ['A ring bears both −OH and −CH3 in a reinforcing arrangement and is nitrated to a sole product. If the −CH3 were instead −NO2 in the same position, would you still expect a sole product? Why or why not?', 'Not necessarily as cleanly — −OH is strongly activating and would still dominate over a deactivating −NO2 (since strongly activating groups generally win over deactivating groups when the gap in directive power is large), but the outcome depends on whether the two groups reinforce or oppose positionally; if they oppose, mixtures are more likely.'],
+  ['Explain, using the classification table, why a ring bearing −NH2 and −COOH in an opposing arrangement would still likely give a fairly clean product dominated by one group.', '−NH2 is strongly activating while −COOH is a deactivating meta director; the gap in directive power between them is large enough (per the stated hierarchy −NH2,−OH > … > meta directors) for the strongly activating group to dominate the orientation despite the opposition.'],
+  ['Why might a ring bearing −Cl and −CH3 in an opposing arrangement give a near-even mixture of products rather than one dominant isomer?', 'Because −Cl (deactivating, o,p-directing) and −CH3 (weakly activating, o,p-directing) have directive powers that are not greatly different — the source shows a comparable case (CH₃/Cl nitration) giving a 58%/42% mixture, illustrating that only a fairly large gap in directive strength gives clean, single-product results.'],
+  ['A chemist wants pure o-nitrotoluene rather than the p-isomer, which co-forms in the same reaction. Based on the text, why is this generally harder to obtain by direct crystallization?', 'Because the more symmetrical p-isomer is less soluble and crystallizes preferentially, leaving some dissolved p-isomer to contaminate the more soluble o-isomer in the mother liquor, making the ortho isomer difficult to purify by simple fractional crystallization.'],
+  ['If you needed to introduce two substituents that are meta to each other on a ring, why should you avoid a synthetic route requiring further substitution directly between them?', 'Because there is often too little room sterically between two meta-positioned groups for appreciable substitution to occur there, so a route depending on attack at that specific position would likely fail or give very low yield.'],
+  ['Explain mechanistically why the benzene ring, despite being aromatic and resonance-stabilized, still reacts with electrophiles at all.', 'Although resonance ties the π electrons more tightly to the carbon framework than an isolated alkene double bond, those electrons remain more loosely held than a localized electron pair and are still available above and below the ring plane to an electron-seeking (electrophilic) reagent.'],
+  ['Devise a two-step route from benzene to essentially pure para-substituted toluenesulfonic acid, addressing the purification issue mentioned in the text.', 'Sulfonate toluene (H₂SO₄/SO₃) to get a 62% para / 32% ortho / 6% meta mixture, then use fractional crystallization: the less soluble, more symmetrical para isomer crystallizes out preferentially, allowing it to be isolated in reasonably pure form while the ortho isomer stays enriched in solution.'],
+  ['Why can the same substituent (e.g., −CH3) give different o:m:p ratios in nitration (58:4:38), sulfonation (32:6:62), and bromination (33:0:67), while always remaining an o,p-director?', 'The directing character (o,p vs. meta) is set by the electronic nature of the substituent and is constant regardless of electrophile, but the exact ratio of ortho to para depends on the specific electrophile\'s size, reaction conditions, and transition-state sterics/electronics, which vary from reaction to reaction.'],
+  ['Using the reactivity/orientation data, explain why nitrobenzene requires far harsher nitration conditions than chlorobenzene, even though both are deactivating.', 'Nitrobenzene (−NO₂, strongly deactivating, ~10⁻⁶× benzene) is deactivated far more strongly than chlorobenzene (−Cl, ~1/30 × benzene), reflecting the difference between a strong electron-withdrawing meta director and a comparatively milder halogen deactivator; hence nitrobenzene needs fuming HNO₃ at 90°C versus much milder standard nitration conditions sufficient for chlorobenzene.'],
+  ['Propose why the source treats halogens as \'a class by themselves\' rather than folding them into either the activating or deactivating columns of the main classification table.', 'Because every other deactivating group in the table is also a meta director (pairing deactivation with meta-direction, and activation with o,p-direction), but the halogens break this pairing — they are deactivating (lowering reaction rate) while still directing ortho and para, so they cannot be classified consistently with either main category.'],
+  ['If a synthesis needs a single, pure isomer and the available EAS step would give an o/p mixture with a deactivating group involved, what two-pronged strategy does the text suggest for planning routes?', '(1) Choose the order of substituent introduction so that whichever group ends up directing the key step is a strong, selective director (ideally a meta director for a clean single isomer, or a strongly activating group over a weak/deactivating one), and (2) if an o/p mixture is unavoidable, rely on fractional crystallization to isolate the less soluble, more symmetrical para isomer.'],
+  ['Explain why \'severity of conditions\' and \'time required\' are both valid but indirect measures of relative reactivity, whereas competitive reactions give a more exact, quantitative comparison.', 'Time and severity comparisons are run under different, non-identical circumstances for each compound (separate experiments), so they only qualitatively indicate faster/slower or milder/harsher reactivity; competitive reactions expose both compounds to the same limited amount of reagent simultaneously under identical conditions, directly yielding a precise relative rate ratio (e.g., toluene 25× benzene).'],
+  ['Based on the classification table, predict whether a ring bearing both −OCH3 and −SO3H (opposing positions) would give a clean single product, and justify using the directive power hierarchy.', 'Likely a fairly clean product dominated by −OCH3, since the hierarchy places moderately activating groups like −OCH3 above meta directors like −SO3H, and the gap between a moderately activating o,p-director and a deactivating meta director is generally large enough for the activating group to control orientation.'],
+  ['Rank the following in order of increasing directive power based on the source hierarchy: −CH₃, −OH, −COOH, −OCH₃.', '−COOH (a meta director) < −CH₃ (weakly activating) < −OCH₃ (moderately activating) < −OH (strongly activating).'],
+  ['A ring bears −N(CH₃)₃⁺ and −CH₃ in opposing positions. Predict which group controls orientation and why.', '−CH₃ likely dominates, since −N(CH₃)₃⁺, though a powerful deactivator/meta director, is opposed by an activating o,p-director; per the hierarchy, activating groups generally win over meta directors when the gap is large enough, and a permanently charged, strongly deactivating group like −N(CH₃)₃⁺ does not appear in the activating column at all, so the weakly activating −CH₃ — being the only activating group present — directs the reaction.'],
+  ['Explain why competitive reactions are described as giving an \'exact, quantitative\' comparison while time/severity methods are not.', 'Because both compounds are exposed to the identical, limited amount of reagent at the same time under the same conditions, the product ratio directly reflects a true relative-rate constant, whereas time and severity comparisons are run as separate experiments that can only be compared loosely.'],
+  ['If nitrating chlorobenzene requires roughly the same conditions as benzene but gives mostly para product, what two conclusions can be drawn about −Cl?', '−Cl is deactivating (since chlorobenzene reacts more slowly/only ~1/30th as fast in competitive nitration) yet ortho,para-directing (since it favors para, not meta) — the classic halogen exception.'],
+  ['Using the classification table, would you expect a ring bearing −CHO and −NH₂ (opposing) to give a clean or mixed product? Justify.', 'A clean product dominated by −NH₂, since −NH₂ is strongly activating while −CHO is a deactivating meta director — a large enough gap in directive power for the strongly activating group to dominate per generalization (a).'],
+  ['A student brominates bromobenzene and obtains mostly ortho and para dibromobenzene. Is this consistent with the source\'s classification of halogens? Explain.', 'Yes — halogens are classified as deactivating yet ortho,para-directing, so further substitution on bromobenzene, though slower than on benzene, is still directed mainly to the ortho and para positions relative to the existing −Br.'],
+  ['Explain why \'many ring closures\' are described as properly belonging to the electrophilic aromatic substitution family despite looking unrelated at first glance.', 'On closer examination, these ring-closure reactions proceed through the same fundamental electrophilic attack on an electron-rich aromatic ring followed by loss of a proton (or equivalent leaving group) to restore aromaticity — the defining mechanistic pattern of EAS — even though the overall transformation looks structurally different from simple nitration or halogenation.'],
+  ['Devise a synthesis route from toluene to a mixture of o- and p-nitrobenzoic acid, and explain the regiochemical basis at each step.', 'Nitrate toluene first (HNO₃/H₂SO₄); since −CH₃ is an o,p-director, this gives a mixture of o- and p-nitrotoluene. Then oxidize each isomer\'s methyl group with K₂Cr₂O₇ to −COOH, preserving the existing substitution pattern and yielding a mixture of o- and p-nitrobenzoic acid.'],
+  ['Why would attempting to nitrate m-xylene (two methyl groups meta to each other) at the position directly between them likely fail to give a major product?', 'Both methyl groups are o,p-directors, but the position between two meta-related substituents is sterically crowded, and the text notes there is often too little room for appreciable substitution there, regardless of the electronic activation from both groups.'],
+  ['Compare the reactivity logic behind why toluene reacts with fuming H₂SO₄ in 1-2 minutes but benzene takes 20-30 minutes.', 'The −CH₃ group activates the ring by donating electron density (hyperconjugation/induction), increasing the π-electron availability to the electrophilic SO₃/H₂SO₄ species, so the activated toluene ring reacts far faster than the unsubstituted, less electron-rich benzene ring.'],
+  ['A synthesis needs pure m-nitrobenzoic acid, but a chemist nitrates toluene first, then oxidizes. What isomer(s) will they actually obtain, and what was their strategic error?', 'They will obtain a mixture of o- and p-nitrobenzoic acid, not the desired m-isomer, because nitration was directed by the o,p-directing −CH₃ group; the error was nitrating before oxidizing instead of oxidizing −CH₃ to −COOH (a meta director) first.'],
+  ['Why does the text single out −NH₂ and −OH as having especially large directive power compared to −OCH₃ or −NHCOCH₃, even though all four are activating?', '−NH₂ and −OH have lone pairs that donate electron density into the ring especially effectively (strongly activating), giving them dominant control over orientation, whereas −OCH₃ and −NHCOCH₃ donate less effectively (moderately activating) and so have comparatively weaker, though still real, directive power.'],
+  ['If equimolar benzene and aniline were both exposed to a small amount of nitrating agent, what product distribution would you predict, and why?', 'Nearly all the product would be nitroaniline, essentially none nitrobenzene, since aniline is roughly a million times more reactive than benzene and would consume almost all of the limited electrophile.'],
+  ['Explain why the order \'nitrate then oxidize\' versus \'oxidize then nitrate\' represents a general principle for planning any multi-step EAS synthesis.', 'Because converting one substituent into another (e.g., −CH₃ to −COOH) changes its directing character (o,p-director to meta director); performing the conversion before or after the key substitution step determines which directing group is in control during that step, and therefore which isomer is obtained.'],
+  ['A ring bears −SO₃H and −CH₃ in an opposing arrangement. Using the hierarchy, predict which group dominates and the likely product purity.', '−CH₃, a weakly activating o,p-director, likely dominates over −SO₃H, a deactivating meta director, since activating groups generally outrank meta directors when the gap is large enough — expect a fairly clean product, though real mixtures can still occur if the gap isn\'t large.'],
+  ['Why can\'t the 60%/40% statistical (position-counting) model alone explain why −NO₂ gives 93.3% meta while −CH₃ gives only 4% meta?', 'Because both substituents have the same 3 ortho/para : 2 meta position ratio available, yet their electronic character (electron-withdrawing vs. donating) overrides the simple statistical distribution, showing the mechanism is electronically, not statistically, controlled.'],
+  ['Predict the outcome of brominating p-nitrotoluene (−CH₃ para to −NO₂) at the position ortho to −CH₃/meta to −NO₂ versus ortho to −NO₂/meta to −CH₃.', 'Bromination is expected to occur preferentially ortho to −CH₃ (which is also meta to −NO₂), since both the o,p-directing −CH₃ and the meta-directing −NO₂ reinforce attack at that position, consistent with generalization (a) for reinforcing substituents.'],
+  ['Why does the text advise choosing reaction order specifically around when a \'conversion of one group into another\' occurs in a synthesis?', 'Because such a conversion (e.g., oxidation of −CH₃ to −COOH) changes the ring\'s directing group from an o,p-director to a meta-director (or vice versa), so performing it before or after the key substitution step directly controls which isomer of the target compound is obtained.'],
+  ['Two chemists both want m-nitrobenzoic acid from toluene. One nitrates first then oxidizes; the other oxidizes first then nitrates. Whose approach is correct and why?', 'The chemist who oxidizes first (toluene → benzoic acid via KMnO₄, then nitrate) is correct, because converting −CH₃ to the meta-directing −COOH before nitration ensures −NO₂ is installed at the meta position, giving the pure m-isomer; nitrating first would leave −CH₃ in control, giving an o/p mixture instead.'],
+  ['Considering that −F gives 100% combined o,p (88% para) while −I gives only 98% combined o,p (60% para), what trend do the halogens show in o:p ratio as you move down the group?', 'The proportion of para product relative to ortho tends to decrease going from −F to −I (para fraction drops from 88% to 60%), even though all four halogens remain essentially fully ortho,para-directing overall.'],
+];
+const flashcardSets = { easy: flashcardsEasy, medium: flashcardsMedium, hard: flashcardsHard };
+let fcLevel = 'easy';
+let flashcards = flashcardSets[fcLevel];
 let fcIndex = 0;
 const fcCard = document.getElementById('fcCard');
 const fcFront = document.getElementById('fcFront');
@@ -810,49 +946,180 @@ document.getElementById('fcShuffle').onclick = ()=>{
   for(let i=flashcards.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [flashcards[i],flashcards[j]]=[flashcards[j],flashcards[i]]; }
   fcIndex=0; renderFC();
 };
+document.querySelectorAll('#fcLevelTabs .level-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#fcLevelTabs .level-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    fcLevel = btn.dataset.level;
+    flashcards = flashcardSets[fcLevel];
+    fcIndex = 0;
+    renderFC();
+  });
+});
 renderFC();
 
 /* ---------------- Quiz bank ---------------- */
-const quizBank = [
-  {q:'What role does the benzene ring play when reacting with electrophiles?', a:'Electron source / Lewis base', w:['Electron acceptor','Brønsted acid','Free-radical initiator']},
-  {q:'Why do typical benzene reactions proceed by substitution rather than addition?', a:'Substitution preserves the resonance-stabilized aromatic ring', w:['Addition needs excess electrophile','Benzene has no double bonds to add to','Addition products are always unstable']},
-  {q:'Where is the π-electron cloud of benzene located?', a:'Above and below the plane of the ring', w:['Only above the ring plane','In the plane of the ring','Localized on alternating carbons only']},
-  {q:'Which catalyst is used in nitration of benzene?', a:'H₂SO₄', w:['AlCl₃','Fe','CF₃COOH']},
-  {q:'What is the product of ArH + HOSO₃H (SO₃)?', a:'A sulfonic acid (ArSO₃H)', w:['A nitro compound','An aryl halide','A ketone']},
-  {q:'Which catalyst is typically used for aromatic halogenation with Cl₂ or Br₂?', a:'Fe', w:['H₂SO₄','AlCl₃','CF₃COOH']},
-  {q:'Friedel–Crafts alkylation uses ArH + RCl with which catalyst?', a:'AlCl₃', w:['H₂SO₄','Fe','SO₃']},
-  {q:'Friedel–Crafts acylation produces which class of product?', a:'A ketone (ArCOR)', w:['An alkylbenzene','A sulfonic acid','An amine']},
-  {q:'What reaction is ArSO₃H + H⁺ (H₂O) → ArH + H₂SO₄?', a:'Desulfonation (protonation)', w:['Nitrosation','Diazo coupling','Thallation']},
-  {q:'Nitrosation and diazo coupling occur readily only for:', a:'Highly reactive aromatic rings', w:['Deactivated rings','Halogenated rings','Any ArH under forcing conditions']},
-  {q:'The Kolbe and Reimer–Tiemann reactions are characteristic of:', a:'Phenols', w:['Nitrobenzenes','Anilines','Toluenes only']},
-  {q:'Which reagent is used for thallation of an aromatic ring?', a:'Tl(OOCCF₃)₃ in CF₃COOH', w:['AlCl₃','HONO',"Ar'N₂⁺X⁻"]},
-  {q:'In sulfonation of toluene at 35 °C, which isomers form in appreciable amounts?', a:'ortho and para', w:['ortho and meta','meta and para','only para']},
-  {q:'What percentage of toluene sulfonation product is the para isomer?', a:'62%', w:['32%','6%','100%']},
-  {q:'A group that makes the ring more reactive than benzene is called:', a:'An activating group', w:['A deactivating group','A meta director','An electrophile']},
-  {q:'A group directing substitution mainly next to and across from itself is a(n):', a:'ortho, para director', w:['meta director','activating agent only','leaving group']},
-  {q:'Toluene reacts with fuming sulfuric acid compared to benzene:', a:'About 10–20× faster', w:['About 10–20× slower','At the same rate','Only under UV light']},
-  {q:'Nitrobenzene undergoes substitution compared to benzene:', a:'More slowly, giving mainly meta product', w:['Faster, giving para product','At the same rate','Only with Friedel-Crafts catalysts']},
-  {q:'In competitive nitration, how much more reactive is toluene than benzene?', a:'About 25 times', w:['About 2 times','About 100 times','Equally reactive']},
-  {q:"Chlorobenzene's reactivity relative to benzene in competitive nitration is:", a:'About 1/30th as reactive', w:['About 30× more reactive','Equal','About 1/2 as reactive']},
-  {q:'Aniline (C₆H₅NH₂) is approximately how much more reactive than benzene?', a:'About one million times', w:['About ten times','About one hundred times','Equally reactive']},
-  {q:'Nitrobenzene is approximately how reactive compared to benzene?', a:'About one-millionth as reactive', w:['About ten times as reactive','Equally reactive','About 1/100 as reactive']},
-  {q:'With no selectivity, what split would 5 open ring positions give?', a:'60% ortho/para, 40% meta', w:['50% / 50%','40% ortho/para, 60% meta','100% ortho/para']},
-  {q:'−OH as a substituent directs nitration almost entirely to:', a:'ortho and para (≈100% combined)', w:['meta (≈100%)','equally to all positions','only para']},
-  {q:'Which substituent directs about 93% of nitration to meta?', a:'−NO₂', w:['−CH₃','−OH','−Cl']},
-  {q:'The halogens (F, Cl, Br, I) are unusual because they are:', a:'Deactivating yet ortho, para-directing', w:['Activating yet meta-directing','Activating and ortho,para-directing','Deactivating and meta-directing']},
-  {q:'Which group is classified as strongly activating?', a:'−NH₂', w:['−CH₃','−Cl','−COOH']},
-  {q:'Which group is classified as moderately activating?', a:'−OCH₃', w:['−NO₂','−SO₃H','−Br']},
-  {q:'−CH₃ and −C₆H₅ belong to which activation class?', a:'Weakly activating', w:['Strongly activating','Deactivating','Meta-directing']},
-  {q:'Which of these is a deactivating, meta-directing group?', a:'−COOH', w:['−CH₃','−OH','−F']},
-  {q:"When two ring substituents reinforce each other's directive effect, the outcome is:", a:'Easily predicted — substitution occurs where both groups favor', w:['Impossible to predict','Always meta to both','A racemic mixture']},
-  {q:'Strongly activating groups generally win over deactivating or weakly activating groups when the gap in directive power is:', a:'Large enough', w:['Always negligible','Only when catalysts are absent','Only in Friedel-Crafts reactions']},
-  {q:'What happens at positions between two groups that are meta to each other?', a:'There is often little substitution there', w:['It is always the major product','It happens exclusively there','It is unaffected by sterics']},
-  {q:'To prepare m-bromonitrobenzene from benzene, the correct order is:', a:'Nitrate first, then brominate', w:['Brominate first, then nitrate','Do both simultaneously','Order does not matter']},
-  {q:'Brominating benzene first and then nitrating gives mainly:', a:'A mixture of ortho and para bromonitrobenzene', w:['Pure meta-bromonitrobenzene','Pure ortho only','No reaction']},
-  {q:'To obtain m-nitrobenzoic acid from toluene, which order should be used?', a:'Oxidize the methyl group first, then nitrate', w:['Nitrate first, then oxidize','Sulfonate first','Halogenate first']},
-  {q:'Why is the para isomer often easier to purify from an o/p mixture?', a:'It is more symmetrical, less soluble, and crystallizes out first', w:['It always forms in 100% yield','It reacts further to remove ortho','It is the only isomer formed']},
-  {q:'Reactivity of a substituted benzene relative to benzene can be measured by:', a:'Comparing reaction times, severity of conditions, or competitive reactions', w:['Only by melting point','Only by color change','Only by boiling point']},
+const quizBankEasy = [
+  {q:'What role does the benzene ring play toward electrophiles?', a:'Electron source (a base)', w:['Electron acceptor', 'Free-radical initiator', 'Brønsted acid']},
+  {q:'Where is benzene\'s π-electron cloud located?', a:'Above and below the ring plane', w:['Only above the ring plane', 'In the plane of the ring, between carbons', 'Localized on one carbon only']},
+  {q:'What type of reagent reacts with the benzene ring in these characteristic reactions?', a:'An electrophilic reagent (or acid)', w:['A nucleophile', 'A free radical', 'A Lewis base']},
+  {q:'What is the general reaction type undergone by benzene?', a:'Electrophilic substitution', w:['Electrophilic addition', 'Nucleophilic substitution', 'Free-radical addition']},
+  {q:'What is the general reaction type undergone by alkenes?', a:'Electrophilic addition', w:['Electrophilic substitution', 'Nucleophilic addition', 'Radical substitution']},
+  {q:'Why does benzene react by substitution rather than addition?', a:'Substitution preserves the resonance-stabilized ring', w:['Addition is thermodynamically impossible', 'Benzene lacks any π electrons', 'Substitution requires no catalyst']},
+  {q:'Which four reaction types occur for nearly all aromatic rings?', a:'Nitration, halogenation, sulfonation, Friedel-Crafts reactions', w:['Nitrosation, diazo coupling, Kolbe, Reimer-Tiemann', 'Desulfonation, thallation, hydrogenation, reduction', 'Ozonolysis, hydration, esterification, hydrolysis']},
+  {q:'Which two reactions occur only for rings of high reactivity?', a:'Nitrosation and diazo coupling', w:['Nitration and sulfonation', 'Halogenation and Friedel-Crafts alkylation', 'Thallation and protonation']},
+  {q:'What does \'Ar\' represent in EAS equations?', a:'Aryl group attached via a ring carbon', w:['Argon gas catalyst', 'An aliphatic chain', 'A leaving group']},
+  {q:'What is the catalyst for nitration of benzene?', a:'H₂SO₄', w:['Fe', 'AlCl₃', 'CF₃COOH']},
+  {q:'What is the product of ArH + HONO₂ (H₂SO₄)?', a:'ArNO₂ + H₂O, a nitro compound', w:['ArSO₃H, a sulfonic acid', 'ArCl, an aryl chloride', 'ArCOR, a ketone']},
+  {q:'What is the catalyst for sulfonation (ArH + HOSO₃H)?', a:'SO₃', w:['Fe', 'AlCl₃', 'H₂SO₄ alone with no catalyst']},
+  {q:'What is the product of sulfonation called?', a:'A sulfonic acid', w:['A nitro compound', 'An aryl halide', 'A ketone']},
+  {q:'What catalyst is used for chlorination or bromination of ArH?', a:'Fe', w:['AlCl₃', 'H₂SO₄', 'SO₃']},
+  {q:'ArH + Cl₂ (Fe) gives which product?', a:'ArCl + HCl, an aryl chloride', w:['ArBr + HBr', 'ArNO₂ + H₂O', 'ArSO₃H + H₂O']},
+  {q:'ArH + Br₂ (Fe) gives which product?', a:'ArBr + HBr, an aryl bromide', w:['ArCl + HCl', 'ArR + HCl', 'ArCOR + HCl']},
+  {q:'What catalyst is used for Friedel-Crafts alkylation (ArH + RCl)?', a:'AlCl₃', w:['Fe', 'H₂SO₄', 'SO₃']},
+  {q:'What is the product of Friedel-Crafts alkylation?', a:'An alkylbenzene (ArR)', w:['A ketone', 'A sulfonic acid', 'An aryl halide']},
+  {q:'What catalyst is used for Friedel-Crafts acylation (ArH + RCOCl)?', a:'AlCl₃', w:['Fe', 'CF₃COOH', 'H₂SO₄']},
+  {q:'What is the product of Friedel-Crafts acylation?', a:'A ketone (ArCOR)', w:['An alkylbenzene', 'An aryl chloride', 'A sulfonic acid']},
+  {q:'What reaction is ArSO₃H + H⁺ (H₂O) → ArH + H₂SO₄ called?', a:'Desulfonation (protonation)', w:['Nitrosation', 'Diazo coupling', 'Thallation']},
+  {q:'What does ArH + D⁺ → ArD + H⁺ represent?', a:'Hydrogen (isotopic) exchange', w:['Desulfonation', 'Thallation', 'Nitrosation']},
+  {q:'Which reagent is used for thallation of an aromatic ring?', a:'Tl(OOCCF₃)₃ in CF₃COOH', w:['AlCl₃', 'HONO', 'Ar\'N₂⁺X⁻']},
+  {q:'Nitrosation and diazo coupling occur readily only for:', a:'Highly reactive aromatic rings', w:['Deactivated rings', 'Halogenated rings', 'Any ArH under forcing conditions']},
+  {q:'What are the Kolbe and Reimer-Tiemann reactions characteristic of?', a:'Phenols', w:['Nitrobenzenes', 'Anilines', 'Toluenes only']},
+  {q:'Are benzene and toluene soluble in sulfuric acid?', a:'No, they are insoluble', w:['Yes, fully soluble', 'Only toluene is soluble', 'Only benzene is soluble']},
+  {q:'How is completion of sulfonation typically observed?', a:'Disappearance of the hydrocarbon layer', w:['A color change to blue', 'Evolution of a gas', 'Formation of a precipitate']},
+  {q:'In sulfonation of toluene at 35°C, which isomers form in appreciable amounts?', a:'ortho and para', w:['ortho and meta', 'meta and para', 'only para']},
+  {q:'What percentage of toluene sulfonation product is the para isomer?', a:'62%', w:['32%', '6%', '100%']},
+  {q:'A group that makes the ring more reactive than benzene is called:', a:'An activating group', w:['A deactivating group', 'A meta director', 'An electrophile']},
+  {q:'A group that makes the ring less reactive than benzene is called:', a:'A deactivating group', w:['An activating group', 'An ortho,para director', 'A nucleophile']},
+  {q:'A group directing substitution mainly ortho and para to itself is a(n):', a:'ortho, para director', w:['meta director', 'activating agent only', 'leaving group']},
+  {q:'A group directing substitution mainly meta to itself is a(n):', a:'meta director', w:['ortho, para director', 'activating agent', 'nucleophile']},
+  {q:'Which group is classified as strongly activating?', a:'−NH₂', w:['−CH₃', '−Cl', '−COOH']},
+  {q:'Which group is classified as strongly activating besides −NH₂?', a:'−OH', w:['−NO₂', '−SO₃H', '−Br']},
+  {q:'Which group is classified as moderately activating?', a:'−OCH₃', w:['−NO₂', '−SO₃H', '−Br']},
+  {q:'Which group is classified as moderately activating besides −OCH₃?', a:'−NHCOCH₃', w:['−CN', '−COOH', '−CHO']},
+  {q:'−CH₃ and −C₆H₅ belong to which activation class?', a:'Weakly activating', w:['Strongly activating', 'Deactivating', 'Meta-directing']},
+  {q:'Which of these is a deactivating, meta-directing group?', a:'−COOH', w:['−CH₃', '−OH', '−F']},
+  {q:'Which of these is a deactivating, meta-directing group?', a:'−NO₂', w:['−CH₃', '−C₆H₅', '−OCH₃']},
+  {q:'Which of these is a deactivating, meta-directing group?', a:'−SO₃H', w:['−NH₂', '−OH', '−CH₃']},
+  {q:'The halogens (F, Cl, Br, I) are unusual because they are:', a:'Deactivating yet ortho, para-directing', w:['Activating yet meta-directing', 'Activating and ortho,para-directing', 'Deactivating and meta-directing']},
+  {q:'With no selectivity, what split would 5 open ring positions give?', a:'60% ortho/para, 40% meta', w:['50% / 50%', '40% ortho/para, 60% meta', '100% ortho/para']},
+  {q:'−OH as a substituent directs nitration almost entirely to:', a:'ortho and para (≈100% combined)', w:['meta (≈100%)', 'equally to all positions', 'only para']},
+  {q:'Which substituent directs about 93% of nitration to meta?', a:'−NO₂', w:['−CH₃', '−OH', '−Cl']},
+  {q:'Toluene reacts with fuming sulfuric acid compared to benzene:', a:'About 10–20× faster', w:['About 10–20× slower', 'At the same rate', 'Only under UV light']},
+  {q:'Nitrobenzene undergoes substitution compared to benzene:', a:'More slowly, giving mainly meta product', w:['Faster, giving para product', 'At the same rate', 'Only with Friedel-Crafts catalysts']},
+  {q:'In competitive nitration, how much more reactive is toluene than benzene?', a:'About 25 times', w:['About 2 times', 'About 100 times', 'Equally reactive']},
+  {q:'Chlorobenzene\'s reactivity relative to benzene in competitive nitration is:', a:'About 1/30th as reactive', w:['About 30× more reactive', 'Equal', 'About 1/2 as reactive']},
+  {q:'Aniline (C₆H₅NH₂) is approximately how much more reactive than benzene?', a:'About one million times', w:['About ten times', 'About one hundred times', 'Equally reactive']},
+  {q:'Nitrobenzene is approximately how reactive compared to benzene?', a:'About one-millionth as reactive', w:['About ten times as reactive', 'Equally reactive', 'About 1/100 as reactive']},
+  {q:'Reactivity of a substituted benzene relative to benzene can be measured by:', a:'Comparing reaction times, severity of conditions, or competitive reactions', w:['Only by melting point', 'Only by color change', 'Only by boiling point']},
+  {q:'Why is electrophilic aromatic substitution synthetically important?', a:'It is the initial route of access to nearly all aromatic compounds', w:['It only works on non-aromatic compounds', 'It cannot introduce new substituents', 'It destroys the aromatic ring permanently']},
+  {q:'What kind of aromatic rings undergo EAS besides benzene?', a:'Many aromatic rings, benzenoid and non-benzenoid', w:['Only benzene itself', 'Only nitrogen-containing rings', 'Only fused polycyclic rings']},
+  {q:'What must be compared to identify whether a product is ortho, meta, or para?', a:'An authentic sample of known structure', w:['Only its boiling point', 'Its color in solution', 'Its reaction with water']},
+  {q:'What determines both how readily attack occurs and where it occurs in EAS?', a:'The group already attached to the ring', w:['The solvent polarity alone', 'The size of the electrophile only', 'The temperature alone']},
+  {q:'Which group set is \'weakly activating\' per the classification table?', a:'−C₆H₅, −CH₃, −C₂H₅', w:['−NH₂, −OH', '−OCH₃, −NHCOCH₃', '−NO₂, −CN']},
+  {q:'Which reaction converts ArSO₃H back to ArH?', a:'Protonation / desulfonation (H₂O, H⁺)', w:['Nitrosation', 'Thallation', 'Diazo coupling']},
+  {q:'Which reagent type reacts with Ar\'N₂⁺X⁻ in diazo coupling?', a:'A highly reactive ArH', w:['Any unreactive ArH', 'Only phenols', 'Only aliphatic amines']},
+  {q:'What is formed when ArH undergoes Friedel-Crafts acylation with RCOCl?', a:'ArCOR (a ketone) + HCl', w:['ArR (an alkylbenzene) + HCl', 'ArCl + HCl', 'ArSO₃H + H₂O']},
 ];
+
+const quizBankMedium = [
+  {q:'Why does the benzene ring act as a base toward electrophiles despite being resonance-stabilized?', a:'Its π electrons, while more tied to the ring than isolated alkene π electrons, remain loosely held and available to electron-seeking reagents', w:['Resonance completely removes π electron availability', 'The ring carries a formal negative charge', 'Benzene has no π electrons at all']},
+  {q:'Comparable nitration of nitrobenzene versus benzene requires:', a:'Fuming HNO₃ and concentrated H₂SO₄ at 90°C, versus <1 hr at 60°C for benzene', w:['Milder conditions than benzene', 'The same conditions as benzene', 'No acid catalyst at all']},
+  {q:'What does the 25:1 ratio of nitrotoluene to nitrobenzene in a competitive nitration reveal?', a:'Toluene is about 25 times more reactive than benzene toward the electrophile', w:['Toluene reacts only at low temperature', 'Benzene is more reactive than toluene', 'Both compounds are equally reactive']},
+  {q:'The o/m/p nitration percentages for toluene are:', a:'58% ortho, 4% meta, 38% para', w:['32% ortho, 6% meta, 62% para', '33% ortho, 0% meta, 67% para', '50% ortho, 50% meta, 0% para']},
+  {q:'The o/m/p bromination percentages for toluene are:', a:'33% ortho, ~0% meta, 67% para', w:['58% ortho, 4% meta, 38% para', '32% ortho, 6% meta, 62% para', '19% ortho, 2% meta, 79% para']},
+  {q:'Does a substituent\'s o,p- vs. meta-directing character change with different electrophiles?', a:'No, it stays the same general type, though exact ratios vary', w:['Yes, it always reverses with a new electrophile', 'Only halogens keep a constant directing character', 'Directing character depends solely on temperature']},
+  {q:'What combined ortho+para nitration percentage does −Br give?', a:'99%', w:['37%', '62%', '1%']},
+  {q:'What meta nitration percentage does −CN give?', a:'81%', w:['19%', '2%', '98%']},
+  {q:'What meta nitration percentage does −COOH give?', a:'80%', w:['19%', '1%', '20%']},
+  {q:'What meta nitration percentage does −SO₃H give?', a:'72%', w:['21%', '7%', '28%']},
+  {q:'In disubstituted rings I, II, and III shown in the source (reinforcing substituents), why is orientation easy to predict?', a:'Both groups\' directive effects point to the same position(s)', w:['One group has no directive effect at all', 'The reaction only occurs at meta positions regardless of groups', 'Neither group influences orientation']},
+  {q:'What is the correct directive power hierarchy from the source?', a:'−NH₂, −OH > −OCH₃, −NHCOCH₃ > −C₆H₅, −CH₃ > meta directors', w:['Meta directors > −NH₂, −OH > −CH₃', '−CH₃ > −NH₂, −OH > meta directors', 'All substituents have equal directive power']},
+  {q:'When −OH and −CH₃ are both present on a ring (opposing arrangement) and nitrated, the result is:', a:'A sole product, controlled by the strongly activating −OH', w:['An even 50/50 mixture', 'A product controlled entirely by −CH₃', 'No reaction occurs']},
+  {q:'When −NHCOCH₃ and −CH₃ are both present and the ring is brominated, the result is:', a:'One chief product, controlled predominantly by −NHCOCH₃', w:['A racemic mixture', 'A product controlled by −CH₃ alone', 'Complete ring deactivation, no reaction']},
+  {q:'What happens in nitration of a ring bearing both −CH₃ and −Cl in opposing positions?', a:'A mixture forms — about 58% and 42% of two isomers', w:['A single, clean product forms', 'No substitution occurs at all', 'Only the meta isomer forms']},
+  {q:'Why is there often little substitution between two groups located meta to each other?', a:'There is not enough steric room between them', w:['Meta positions are electronically deactivated only', 'The reaction always avoids ring positions between substituents on principle', 'It never happens under any conditions']},
+  {q:'To obtain m-bromonitrobenzene from benzene, the correct order is:', a:'Nitrate first, then brominate', w:['Brominate first, then nitrate', 'Do both simultaneously', 'Order does not matter']},
+  {q:'Brominating benzene first and then nitrating gives mainly:', a:'A mixture of ortho and para bromonitrobenzene', w:['Pure meta-bromonitrobenzene', 'Pure ortho only', 'No reaction']},
+  {q:'What is the product distribution when bromobenzene is nitrated?', a:'38% ortho, 62% para bromonitrobenzene', w:['100% meta bromonitrobenzene', '50% ortho, 50% meta', '67% ortho, 33% para']},
+  {q:'To obtain m-nitrobenzoic acid from toluene, which order should be used?', a:'Oxidize the methyl group first, then nitrate', w:['Nitrate first, then oxidize', 'Sulfonate first', 'Halogenate first']},
+  {q:'Nitrating toluene first (before oxidation) yields, upon later oxidation with K₂Cr₂O₇:', a:'A mixture of o- and p-nitrobenzoic acid', w:['Pure m-nitrobenzoic acid', 'Pure benzoic acid only', 'No reaction with K₂Cr₂O₇']},
+  {q:'Why is the para isomer often easier to purify from an o/p mixture?', a:'It is more symmetrical, less soluble, and crystallizes out first', w:['It always forms in 100% yield', 'It reacts further to remove ortho', 'It is the only isomer formed']},
+  {q:'Which oxidizing agent converts toluene\'s methyl group to −COOH before nitration in the text\'s example?', a:'KMnO₄', w:['K₂Cr₂O₇ only', 'H₂SO₄', 'AlCl₃']},
+  {q:'Which reagent converts o- and p-nitrotoluene\'s methyl group to −COOH after nitration?', a:'K₂Cr₂O₇', w:['KMnO₄ only', 'HNO₃', 'Fe/HCl']},
+  {q:'What best explains why −OCH₃ has greater directive power than −CH₃?', a:'−OCH₃ is moderately activating while −CH₃ is only weakly activating', w:['−OCH₃ is a meta director', '−CH₃ is more strongly activating than −OCH₃', 'Both have identical directive power']},
+  {q:'Which pair of methods can establish that a substituent is deactivating without a direct competition experiment?', a:'Comparing reaction time and comparing severity of conditions needed', w:['Only comparing color of product', 'Only measuring melting point', 'Only observing crystallinity']},
+  {q:'How are competitive reactions between benzene and a substituted benzene typically run?', a:'Equimolar amounts of both compete for a limited amount of reagent in a common solvent', w:['Each compound is reacted separately with excess reagent', 'Only the substituted compound is exposed to reagent', 'The reagent is added in large excess to each separately']},
+  {q:'Which combined ortho+para nitration percentage corresponds to −I?', a:'98%', w:['38%', '60%', '2%']},
+  {q:'Which combined ortho+para nitration percentage corresponds to −F?', a:'100%', w:['12%', '88%', '0%']},
+  {q:'According to the table, −NHCOCH₃ gives what para nitration percentage?', a:'79%', w:['19%', '2%', '98%']},
+  {q:'In the disubstituted ring example IV (Cl/Br), the approximate nitration split is:', a:'37% / 1% / 62%', w:['58% / 4% / 38%', '33% / 0% / 67%', '19% / 79% / 2%']},
+  {q:'In the disubstituted ring example V (CH₃/Cl), the approximate nitration split is:', a:'59% / 9% / 32%', w:['37% / 1% / 62%', '32% / 6% / 62%', '6.4% / 93.3% / 0.3%']},
+  {q:'Which statement best reflects the relationship between group strength and o/p vs meta selectivity in the data?', a:'Seven groups direct 96–100% to o,p while six groups direct 72–94% to meta', w:['All groups direct exactly 60% o,p and 40% meta', 'No group exceeds 50% selectivity for any position', 'Every group directs equally to all three positions']},
+  {q:'Why does the text emphasize that isomer identification requires comparison with an authentic sample?', a:'Because confirming a product as ortho, meta, or para needs a reference of known, independently confirmed structure', w:['Because spectroscopy cannot distinguish isomers', 'Because all isomers have identical properties', 'Because reaction yields alone establish structure']},
+  {q:'What is the key difference between how \'time required\' and \'competitive reaction\' methods measure reactivity?', a:'Time comparisons use separate, non-simultaneous experiments; competitive reactions test both compounds simultaneously for the same reagent', w:['They are identical procedures', 'Competitive reactions never involve benzene', 'Time comparisons always overstate reactivity']},
+  {q:'Which statement about halogens\' orientation vs. reactivity is correct per the classification table?', a:'They deactivate the ring but still direct ortho and para', w:['They activate the ring and direct meta', 'They deactivate the ring and direct meta', 'They have no directing effect at all']},
+  {q:'What meta nitration percentage does −N(CH₃)₃⁺ give?', a:'89%', w:['11%', '0%', '6.4%']},
+  {q:'What combined ortho+para nitration percentage does −N(CH₃)₃⁺ give?', a:'11%', w:['89%', '0%', '100%']},
+  {q:'What is generalization (a) for disubstituted benzenes with opposing groups?', a:'Strongly activating groups generally win out over deactivating or weakly activating groups', w:['Meta directors always win regardless of the other group', 'Halogens always control orientation', 'Weakly activating groups always dominate strongly activating ones']},
+  {q:'What is generalization (b) for disubstituted benzenes?', a:'There is often little substitution between two groups that are meta to each other', w:['Substitution always occurs exactly between two meta groups', 'Meta-positioned groups always give 50/50 mixtures', 'Two meta groups cancel each other\'s directing effect entirely']},
+  {q:'Why are nitrosation and diazo coupling limited to highly reactive rings?', a:'Because HONO and diazonium salts are relatively weak electrophiles that need a strongly activated ring to react', w:['Because they require Friedel-Crafts catalysts', 'Because they only work on deactivated rings', 'Because they are unrelated to electrophilic substitution']},
+  {q:'In the o/m/p data table, which group shows the smallest combined ortho+para percentage among the meta directors listed (excluding the halogens/activators)?', a:'−N(CH₃)₃⁺ at 11%', w:['−COOH at 20%', '−SO₃H at 28%', '−CHO at 28%']},
+  {q:'Which of these activating groups is listed as \'moderately activating\' alongside −OCH₃?', a:'−NHCOCH₃', w:['−C₆H₅', '−CH₃', '−C₂H₅']},
+  {q:'Toluene reacting with fuming H₂SO₄ in 1-2 minutes versus benzene\'s 20-30 minutes illustrates which concept?', a:'−CH₃ activates the ring, increasing π-electron availability to the electrophile', w:['−CH₃ deactivates the ring toward electrophiles', 'Benzene lacks any π electrons', 'Fuming sulfuric acid does not react with substituted rings']},
+  {q:'Which best restates the source\'s definition of an ortho,para director?', a:'A group causing attack chiefly at positions ortho and para to itself', w:['A group that only reacts with meta-directing electrophiles', 'A group that blocks all substitution on the ring', 'A group active only in Friedel-Crafts reactions']},
+  {q:'According to the text, what must be true for strongly activating groups to reliably \'win out\' over deactivating groups in orientation?', a:'There must be a fairly large difference in the effects of the two groups', w:['The two groups must be adjacent on the ring', 'The reaction must be run at low temperature', 'Only meta directors ever compete with activating groups']},
+  {q:'Which pair of groups would you expect to give a genuinely mixed (not clean single) product per the text\'s CH₃/Cl example?', a:'Two groups with comparable, not greatly different, directive power', w:['Two groups from opposite ends of the hierarchy', 'Any two groups located ortho to each other', 'Two groups that are both strongly activating']},
+  {q:'Which of the following is NOT one of the three ways to compare reactivity mentioned in the text?', a:'Measuring the melting point of the product', w:['Comparing reaction time under identical conditions', 'Comparing severity of conditions needed', 'Running competitive reactions']},
+  {q:'Why is nitromethane or acetic acid mentioned as a useful solvent for competitive reactions?', a:'It dissolves both the organic reactants and the inorganic nitric acid reagent', w:['It selectively reacts with only benzene', 'It prevents any reaction from occurring', 'It is itself the electrophile in the reaction']},
+  {q:'What does the text say happens to the reactivity/orientation of a substituent when different electrophilic reagents are used?', a:'The same general kind of orientation (o,p or meta) is preserved regardless of the electrophile', w:['The directing character reverses with every different electrophile', 'Only nitration reveals a substituent\'s true directing character', 'Reactivity becomes unpredictable with different electrophiles']},
+];
+
+const quizBankHard = [
+  {q:'A route to m-bromonitrobenzene fails and gives mostly ortho/para isomers instead. What synthetic error most likely occurred?', a:'Bromination was performed before nitration instead of after', w:['Nitration was performed at too low a temperature', 'Too much AlCl₃ catalyst was used', 'The reaction was run in the dark']},
+  {q:'Given toluene is ~25× as reactive as benzene and chlorobenzene is ~1/30 as reactive as benzene, approximately how much more reactive is toluene than chlorobenzene?', a:'About 750 times', w:['About 5 times', 'About 55 times', 'About 900,000 times']},
+  {q:'Aniline is ~10⁶× as reactive as benzene and nitrobenzene is ~10⁻⁶× as reactive. The overall reactivity gap between aniline and nitrobenzene is on the order of:', a:'10¹²', w:['10⁶', '10³', '10⁻¹²']},
+  {q:'Why does the \'statistical\' expectation of 60% ortho/para and 40% meta fail to predict real substituent behavior?', a:'Electronic effects of the substituent dominate over the simple position-count statistics, pushing ratios to 96–100% or 72–94%', w:['The statistical expectation is always exactly correct', 'Only steric effects, never electronics, determine the ratio', 'Real substitution never favors ortho or para at all']},
+  {q:'A ring bears −OH and −NO₂ in an arrangement where their directive effects oppose. Based on the directive power hierarchy, the major product is controlled mainly by:', a:'−OH, since strongly activating groups generally dominate over meta directors when the gap in directive power is large', w:['−NO₂, since deactivating groups always dominate', 'Neither group; no reaction occurs', 'Both groups equally, giving a 50/50 mixture always']},
+  {q:'A ring bears −Cl and −CH₃ in an opposing arrangement. Based on the text\'s comparable CH₃/Cl case, the expected outcome is:', a:'A mixture of close to comparable amounts of two isomers, since their directive powers are not greatly different', w:['A single, clean product dominated by −Cl', 'A single, clean product dominated by −CH₃', 'No substitution occurs anywhere on the ring']},
+  {q:'Why is pure o-nitrotoluene generally harder to isolate from an o/p nitration mixture than pure p-nitrotoluene?', a:'The less soluble, more symmetrical para isomer crystallizes out preferentially, leaving ortho isomer contaminated in the mother liquor', w:['Ortho-nitrotoluene decomposes upon crystallization', 'Para-nitrotoluene is more soluble and stays dissolved', 'Ortho and para isomers cannot be separated by any method']},
+  {q:'Why should a synthetic route avoid requiring substitution directly between two meta-positioned substituents?', a:'Steric crowding between meta substituents leaves little room for a new group to be introduced there', w:['Meta positions are always electronically deactivated regardless of substituents', 'It is thermodynamically forbidden by symmetry', 'Such positions react explosively']},
+  {q:'Why does benzene still react with electrophiles despite its aromatic resonance stabilization?', a:'Its π electrons, though more tightly bound by resonance than an alkene\'s, remain loosely held enough to be available to an electron-seeking reagent', w:['Aromaticity has no effect on electron availability', 'Benzene\'s π electrons are completely localized on one carbon', 'Resonance makes the ring entirely electron-poor']},
+  {q:'For a target of essentially pure p-toluenesulfonic acid from toluene, what two-part strategy does the source imply?', a:'Sulfonate to get a 62% para-rich mixture, then use fractional crystallization since the para isomer is less soluble and crystallizes first', w:['Use only meta-directing conditions to force 100% para directly', 'Sulfonate at very low temperature to get pure para with no mixture', 'Nitrate first, then sulfonate to isolate pure para']},
+  {q:'Why can the same group (−CH₃) give different ortho:para ratios in nitration (58:38), sulfonation (32:62), and bromination (33:67) while remaining an ortho,para director in all three?', a:'The directing character is set electronically and stays o,p-type, but the exact ortho:para ratio depends on the specific electrophile\'s sterics/conditions', w:['The group changes its directing character with each electrophile', 'Only nitration gives real data; the others are statistical artifacts', 'Ortho and para positions are chemically identical, so ratios are arbitrary']},
+  {q:'Nitrobenzene requires much harsher nitration conditions than chlorobenzene despite both being deactivating. What best explains this?', a:'−NO₂ is a far stronger deactivator (~10⁻⁶× benzene) than −Cl (~1/30× benzene)', w:['Chlorobenzene is actually more deactivating than nitrobenzene', 'Both groups deactivate the ring to an identical degree', 'Deactivating strength cannot be compared between different group types']},
+  {q:'Why does the text treat halogens as \'a class by themselves\' rather than fitting them into the main activating/deactivating table structure?', a:'Every other deactivating group in the table is also meta-directing, but halogens are deactivating while still ortho,para-directing, breaking that pairing', w:['Halogens do not participate in electrophilic aromatic substitution at all', 'Halogens are actually strongly activating like −NH₂', 'The table only applies to non-halogenated rings']},
+  {q:'If a synthesis needs a single pure isomer via an EAS step but the available directing group would normally give an o/p mixture, which approach does the text support?', a:'Rely on fractional crystallization to isolate the less soluble, more symmetrical para isomer, or choose group order so a meta director controls the key step instead', w:['Always accept the crude mixture as the final product', 'Switch to a non-aromatic starting material entirely', 'Use no catalyst so the reaction stops after one substitution']},
+  {q:'Why do competitive reactions give a more exact reactivity comparison than time or severity comparisons?', a:'Both compounds compete for the same limited reagent under identical, simultaneous conditions, directly yielding a precise ratio', w:['Competitive reactions use no catalyst, simplifying analysis', 'Time and severity comparisons always give the same numeric answer', 'Competitive reactions avoid the need for authentic reference samples']},
+  {q:'A ring bears −OCH₃ and −SO₃H in opposing positions. Based on the directive power hierarchy, predict the outcome.', a:'A fairly clean product dominated by −OCH₃, since moderately activating groups outrank deactivating meta directors like −SO₃H', w:['A clean product dominated by −SO₃H, since deactivating groups always win', 'An explosive, uncontrolled reaction', 'Equal amounts of all three possible isomers']},
+  {q:'Why is oxidizing toluene\'s methyl group before nitrating (rather than after) the correct strategy for making m-nitrobenzoic acid, in terms of directing-group logic?', a:'Converting −CH₃ (o,p-director) to −COOH (meta director) before nitration ensures the incoming −NO₂ is directed meta, giving one isomer instead of a mixture', w:['Oxidation must always precede nitration for any aromatic compound', 'Nitration destroys −COOH groups if performed first', 'KMnO₄ cannot react with nitro-substituted rings at all']},
+  {q:'Which best summarizes the overall relationship the source draws between a substituent\'s activating/deactivating strength and its role in synthesis planning?', a:'Strongly activating or strongly deactivating groups (with large directive-power gaps) give cleaner, more predictable single products; comparable-strength opposing groups give mixtures', w:['Only meta directors are ever useful in synthesis planning', 'Reactivity and orientation are entirely unrelated to synthetic strategy', 'Every EAS reaction gives a single clean product regardless of substituents']},
+  {q:'Which conclusion about EAS reaction families is best supported by the text?', a:'Reactions like desulfonation, isotopic exchange, and many ring closures, despite looking different, are properly classified as EAS reactions', w:['Desulfonation and ring closures are unrelated to electrophilic aromatic substitution', 'Only nitration and halogenation qualify as true EAS reactions', 'Isotopic exchange is a form of nucleophilic aromatic substitution']},
+  {q:'Ranking −COOH, −CH₃, −OCH₃, and −OH by directive power from lowest to highest per the source hierarchy gives:', a:'−COOH < −CH₃ < −OCH₃ < −OH', w:['−OH < −OCH₃ < −CH₃ < −COOH', '−CH₃ < −COOH < −OH < −OCH₃', 'All four have identical directive power']},
+  {q:'A ring bears −N(CH₃)₃⁺ and −CH₃ in opposing positions. Which group most likely controls orientation, and why?', a:'−CH₃, since it is the only activating group present, and activating groups generally dominate meta directors when the gap is large', w:['−N(CH₃)₃⁺, since deactivating groups always control orientation', 'Neither; the ring becomes unreactive', 'Both equally, giving a precise 50/50 mixture']},
+  {q:'Why are competitive reactions considered more rigorous than time-based comparisons for establishing relative reactivity?', a:'Both compounds face the same limited reagent simultaneously under identical conditions, giving a direct rate ratio', w:['Competitive reactions eliminate the need for a catalyst', 'Time-based comparisons always overstate the true reactivity ratio', 'Competitive reactions work only for deactivated rings']},
+  {q:'Chlorobenzene reacts about 1/30th as fast as benzene in competitive nitration, yet nitration still occurs mainly at the para position. What does this combination show about −Cl?', a:'−Cl is deactivating yet ortho,para-directing — the classic halogen exception', w:['−Cl is activating and meta-directing', '−Cl has no measurable directing effect', '−Cl behaves identically to −NO₂']},
+  {q:'A ring bears −CHO and −NH₂ in opposing positions. Based on the hierarchy, the expected product is:', a:'A clean product dominated by −NH₂, a strongly activating group, over the deactivating meta-director −CHO', w:['A clean product dominated by −CHO', 'A roughly 50/50 mixture of isomers', 'No reaction, since the groups cancel out']},
+  {q:'Further bromination of bromobenzene is directed mainly to which positions, consistent with the halogen classification?', a:'Ortho and para to the existing −Br', w:['Meta to the existing −Br', 'Exclusively ipso (same carbon)', 'Randomly, with no preference']},
+  {q:'Why are \'many ring closures\' considered EAS reactions despite looking structurally unrelated to nitration?', a:'On closer examination they proceed by the same electrophilic-attack-then-reamortization mechanistic pattern that defines EAS', w:['They always require exactly the same reagents as nitration', 'They only occur on non-aromatic starting materials', 'They are unrelated and the text classifies them separately']},
+  {q:'To make a mixture of o- and p-nitrobenzoic acid from toluene, which sequence is correct?', a:'Nitrate toluene first, then oxidize each isomer\'s methyl group with K₂Cr₂O₇', w:['Oxidize toluene first with KMnO₄, then nitrate', 'Sulfonate first, then oxidize', 'Halogenate first, then nitrate']},
+  {q:'Why would nitrating m-xylene directly between its two meta methyl groups likely give little product there, despite both groups being activating o,p-directors?', a:'Steric crowding between two meta-positioned substituents leaves too little room for substitution there', w:['Meta-positioned methyl groups are electronically deactivating', 'The position between them is always occupied by hydrogen bonding', 'Such positions react explosively, so data is unavailable']},
+  {q:'The fact that toluene reacts with fuming H₂SO₄ roughly 10-20× faster than benzene (by time) and 25× faster in competitive nitration illustrates:', a:'Two different but consistent experimental methods pointing to the same activating effect of −CH₃', w:['A contradiction in the data that cannot be reconciled', 'Proof that sulfonation and nitration have opposite substituent effects', 'Evidence that −CH₃ is actually deactivating']},
+  {q:'A chemist wants pure m-nitrobenzoic acid but mistakenly nitrates toluene before oxidizing. What will they obtain, and why?', a:'A mixture of o- and p-nitrobenzoic acid, since nitration was controlled by the o,p-directing −CH₃ before it was converted to −COOH', w:['Pure m-nitrobenzoic acid regardless of order', 'No reaction, since toluene cannot be nitrated', 'Only benzoic acid, since nitration fails on toluene']},
+  {q:'Why does −NH₂ have greater directive power than −NHCOCH₃, even though both contain nitrogen attached to the ring?', a:'The free amine lone pair in −NH₂ donates more effectively into the ring than the amide nitrogen in −NHCOCH₃, whose lone pair is partly delocalized onto the carbonyl', w:['−NHCOCH₃ is actually a meta director', '−NH₂ and −NHCOCH₃ have identical directive power', '−NHCOCH₃ contains no nitrogen lone pair at all']},
+  {q:'If benzene and aniline compete for a small amount of limited nitrating agent, the product will be:', a:'Overwhelmingly nitroaniline, since aniline is about a million times more reactive', w:['Overwhelmingly nitrobenzene', 'Roughly equal amounts of both nitro products', 'No product, since aniline blocks the reaction']},
+  {q:'What general lesson does the toluene/nitrobenzoic acid synthesis example teach about multi-step EAS planning?', a:'The order of substitution versus group-conversion steps determines which directing group controls the key step, and thus which isomer results', w:['Oxidation state changes never affect ring-directing behavior', 'All synthesis routes to a given target give the same isomer regardless of order', 'Group conversions are irrelevant to isomer purity']},
+  {q:'A ring bears −SO₃H and −CH₃ in opposing positions. Which is the more likely outcome and reasoning?', a:'A fairly clean product controlled by −CH₃, since activating groups generally outrank meta directors when the gap is large enough', w:['A clean product controlled by −SO₃H, since deactivators always dominate', 'An exactly even split with no group in control', 'Total ring deactivation with no substitution occurring']},
+  {q:'Why can\'t a simple position-counting (60/40) model explain the difference between −NO₂\'s 93.3% meta and −CH₃\'s 4% meta selectivity?', a:'Both groups have identical position ratios available, so the huge difference must come from electronic (donating vs. withdrawing) effects, not statistics', w:['The position-counting model is always correct and this is an error in the data', '−NO₂ and −CH₃ do not have the same number of open ring positions', 'Statistical models always outperform electronic explanations for these groups']},
+  {q:'In p-nitrotoluene (−CH₃ and −NO₂ para to each other), where would you predict a new bromination to occur, and why?', a:'Ortho to −CH₃ (which is also meta to −NO₂), since both groups\' directing effects reinforce attack there', w:['Between the two groups, since both direct there', 'Exclusively at the position of −NO₂ itself', 'Randomly, since the two groups cancel out']},
+  {q:'What does the text\'s emphasis on \'the proper time for conversion\' of one group into another imply for synthesis design?', a:'The chemist must decide whether to convert a group before or after a key substitution step, since this changes which directing group governs the outcome', w:['Group conversions should always be done last regardless of target', 'Directing effects are unaffected by when a conversion is performed', 'Only one synthetic order is ever chemically possible for a given target']},
+  {q:'Between oxidizing toluene first vs. nitrating toluene first en route to a nitrobenzoic acid, which approach guarantees a single pure isomer, and why?', a:'Oxidizing first (toluene → benzoic acid → nitrate), because the resulting meta-directing −COOH cleanly directs nitration to one position', w:['Nitrating first, because −CH₃ is a stronger director than −COOH', 'Neither approach gives a single isomer', 'Both approaches are chemically identical in outcome']},
+  {q:'Considering −F (88% para of 100% combined o,p) versus −I (60% para of 98% combined o,p), what trend in para-selectivity is observed down the halogen group?', a:'Para-selectivity decreases somewhat from −F to −I, even though all halogens remain strongly ortho,para-directing overall', w:['Para-selectivity increases steadily from −F to −I', 'All halogens give identical exact ortho:para ratios', 'Iodine directs almost exclusively meta, unlike the other halogens']},
+  {q:'Which statement most accurately reflects how the text links reactivity magnitude (e.g., aniline ~10⁶×, nitrobenzene ~10⁻⁶×) to synthetic planning?', a:'Extremely large reactivity differences mean a limited electrophile will react almost entirely with the more reactive partner, which must be accounted for in competitive or mixed-substrate reactions', w:['Reactivity magnitude has no bearing on which product forms in a mixed reaction', 'Only exact 1:1 reactivity ratios are relevant to synthesis planning', 'Reactivity differences only matter for time-based, not competitive, experiments']},
+];
+const quizBankSets = { easy: quizBankEasy, medium: quizBankMedium, hard: quizBankHard };
+let quizLevel = 'easy';
+let quizBank = quizBankSets[quizLevel];
 
 let quizOrder = [];
 let userAnswers = [];
@@ -914,6 +1181,15 @@ function updateScore(){
 }
 
 document.getElementById('retakeBtn').onclick = buildQuiz;
+document.querySelectorAll('#quizLevelTabs .level-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#quizLevelTabs .level-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    quizLevel = btn.dataset.level;
+    quizBank = quizBankSets[quizLevel];
+    buildQuiz();
+  });
+});
 buildQuiz();
 </script>
 </body>
